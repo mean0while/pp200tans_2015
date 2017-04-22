@@ -1,0 +1,18 @@
+STAR Template Scheduler 0.1 (/afs/rhic.bnl.gov/star/packages/scripts/star-submit)
+
+STAR Unified Meta Scheduler 1.10.18
+Your Log file can be found at: /afs/rhic.bnl.gov/star/doc/www/html/tmp/pub/scheduler/jcmei.log
+Reading request description file : schedTemplateExp.xml
+Analyzing XML...XML OK
+Custum splitting splitBy on "filename" is set
+Fractional splitting is turned on !!!
+Executing : get_file_list.pl -keys fdid,storage,site,node,path,filename,events -cond production=P16id,trgsetupname~production_pp200trans_2015,filetype=daq_reco_MuDst,filename~st_physics_160,tpx=1,tof=1,emc=1,eemc=1,sanity=1,runnumber=16064077 -limit 0.....56 Entries Recovered 
+[2017.04.12 07:18:25 EDT] Dataset size is 28 files
+Removing files not on site BNL
+[2017.04.12 07:18:25 EDT] Started with 28 files, current size is 2files, 26files dropped.
+-------Processing recovered dataset for xrootd/xrootddev/rfio-------
+Dropping files with duplicate LFN (files that are the same)
+[2017.04.12 07:18:25 EDT] Started with 2 files, current size is 2files, 0 duplicate files dropped.
+Splitting by user requested "filename".
+Scheduling failed!
+(error -1) Could not write to the dataset buffer fileschedB4ABD21ED7FF58123B68AC0BB994393A.dataset.tmp

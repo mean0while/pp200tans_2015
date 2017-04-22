@@ -55,7 +55,6 @@ void run_FastQA( int nEvts=10, const char* fin_name="in.root", const char *fout_
     StMuDbReader* db = StMuDbReader::instance();
 
     StTriggerFilterMaker* filterMaker = new StTriggerFilterMaker;
-    filterMaker->SetDebug(0);
     filterMaker->addTrigger(480202);  // BHT1*VPDMB-30
     filterMaker->addTrigger(480206);  // BHT1*VPDMB-30-nobsmd
     filterMaker->addTrigger(480404);  // JP1
@@ -73,7 +72,7 @@ void run_FastQA( int nEvts=10, const char* fin_name="in.root", const char *fout_
     adc2e->saveAllStEvent(true);
 
     StFastQaMaker *fastQaMaker = new StFastQaMaker("fastQa", muDstMaker, fout_name);
-
+    
     chain->SetDebug(0);
     chain->Init();
     chain->EventLoop(1,nEvts);

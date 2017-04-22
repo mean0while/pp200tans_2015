@@ -1,0 +1,23 @@
+
+
+Note 
+Tue Sep 20 23:06:31 EDT 2016
+
+pp 200GeV run 2015 production is completed, next datasets have been
+processed:
+
+production_pp200trans_2015
+production_pp200long_2015
+production_pp200long2_2015
+production_pp200long3_2015
+
+Statistics by stream data you can find on the production summary browser:
+http://www.star.bnl.gov/public/comp/prod/DataSummary.html
+
+under the trigger set names:
+
+http://www.star.bnl.gov/public/comp/prod/prodsum/production_pp200trans_2015.P16id.html
+http://www.star.bnl.gov/public/comp/prod/prodsum/production_pp200long2_2015.P16id.html
+http://www.star.bnl.gov/public/comp/prod/prodsum/production_pp200long_2015.P16id.html
+http://www.star.bnl.gov/public/comp/prod/prodsum/production_pp200long3_2015.P16id.html
+
