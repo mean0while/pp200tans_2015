@@ -26,7 +26,7 @@
 #include <fstream>
 #include <stdlib.h>
 
-#include "myClass/miniTrack/miniTrack.h"
+#include "myClass/miniTrack.h"
 #include "StChargeTrackMaker.h"
 
 

@@ -1,7 +1,7 @@
 #ifndef __StChargeRecMaker_h__
 #define __StChargeRecMaker_h__
 
-#include "miniTrack.h"
+#include "myClass/miniTrack.h"
 #include "StMaker.h"
 
 
