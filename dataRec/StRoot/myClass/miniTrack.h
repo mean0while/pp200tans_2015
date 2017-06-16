@@ -4,8 +4,16 @@
 
 #include "TObject.h"
 #include "TArrayI.h"
-#include "StarClassLibrary/StThreeVector.hh"
-#include "StarClassLibrary/StPhysicalHelix.hh"
+#include "StarClassLibrary/SystemOfUnits.h"
+#include "StarClassLibrary/StHelix.hh"
+#include "StarClassLibrary/StThreeVectorD.hh"
+#include "StarClassLibrary/StPhysicalHelixD.hh"
+#include "StMuDSTMaker/COMMON/StMuTrack.h"
+#include "StMuDSTMaker/COMMON/StMuBTofHit.h"
+#include "StMuDSTMaker/COMMON/StMuProbPidTraits.h"
+#include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
+#include "StBTofUtil/StV0TofCorrection.h"
+
 
 class miniTrack : public TObject {
 
@@ -19,18 +27,18 @@ private:
   int m_nHitsFit;
   int m_nHitsPos;
 
-  float m_dEdx;
-  float m_nSigmaElectron;
-  float m_nSigmaKaon;
-  float m_nSigmaPion;
-  float m_nSigmaProton;
-  float m_pidElectron;
-  float m_pidKaon;
-  float m_pidPion;
-  float m_pidProton;
-  float m_yPid[4];
+  double m_dEdx;
+  double m_nSigmaElectron;
+  double m_nSigmaKaon;
+  double m_nSigmaPion;
+  double m_nSigmaProton;
+  double m_pidElectron;
+  double m_pidKaon;
+  double m_pidPion;
+  double m_pidProton;
+  double m_yPid[4];
 
-  float m_dca;
+  StThreeVectorF m_dca;
   StThreeVectorF m_p_pv;
   StThreeVectorF m_p_first;
   StThreeVectorF m_p_last;
@@ -38,11 +46,11 @@ private:
 
   // TOF infor
   int m_matchTOF;
-  float m_betaTOF;
+  double m_betaTOF;
 
   // EMC infor
   int m_matchBEMC;
-  float m_energyBEMC;
+  double m_energyBEMC;
   TArrayI m_towerBEMC;
 
 public:
@@ -57,35 +65,35 @@ public:
   int get_charge() const {return m_charge;}
   int get_nHitsFit() const {return m_nHitsFit;}
   int get_nHitsPos() const {return m_nHitsPos;}
-  float get_dca() const {return m_dca;}
-  float get_dEdx() const {return m_dEdx;}
-  float get_nSigmaElectron() const {return m_nSigmaElectron;}
-  float get_nSigmaKaon() const {return m_nSigmaKaon;}
-  float get_nSigmaPion() const {return m_nSigmaPion;}
-  float get_nSigmaProton() const {return m_nSigmaProton;}
-  float get_pidElectron() const {return m_pidElectron;}
-  float get_pidKaon() const {return m_pidKaon;}
-  float get_pidPion() const {return m_pidPion;}
-  float get_pidProton() const {return m_pidProton;}
-  float get_yPidElectron() const {return m_yPid[0];}
-  float get_yPidProton() const {return m_yPid[1];}
-  float get_yPidKaon() const {return m_yPid[2];}
-  float get_yPidPion() const {return m_yPid[3];}
+  double get_dca() const {return m_dca;}
+  double get_dEdx() const {return m_dEdx;}
+  double get_nSigmaElectron() const {return m_nSigmaElectron;}
+  double get_nSigmaKaon() const {return m_nSigmaKaon;}
+  double get_nSigmaPion() const {return m_nSigmaPion;}
+  double get_nSigmaProton() const {return m_nSigmaProton;}
+  double get_pidElectron() const {return m_pidElectron;}
+  double get_pidKaon() const {return m_pidKaon;}
+  double get_pidPion() const {return m_pidPion;}
+  double get_pidProton() const {return m_pidProton;}
+  double get_yPidElectron() const {return m_yPid[0];}
+  double get_yPidProton() const {return m_yPid[1];}
+  double get_yPidKaon() const {return m_yPid[2];}
+  double get_yPidPion() const {return m_yPid[3];}
   int get_matchTOF() const {return m_matchTOF;}
-  float get_betaTOF() const {return m_betaTOF;}
+  double get_betaTOF() const {return m_betaTOF;}
   int get_matchBEMC() const {return m_matchBEMC;}
-  float get_energyBEMC() const {return m_energyBEMC;}
+  double get_energyBEMC() const {return m_energyBEMC;}
   int get_towerBEMC(int index) const {return m_towerBEMC.At(index);}
-  StThreeVectorF get_p_pv() const {return m_p_pv;}
-  StThreeVectorF get_p_first() const {return m_p_first;}
-  StThreeVectorF get_p_last() const {return m_p_last;}
+  StThreeVectorD get_p_pv() const {return m_p_pv;}
+  StThreeVectorD get_p_first() const {return m_p_first;}
+  StThreeVectorD get_p_last() const {return m_p_last;}
   StPhysicalHelixD get_helix() const {return m_helix;}
 
   bool isGood();
-  float m2TOF();
+  double m2TOF();
 
   ClassDef(miniTrack,1)
 };
 
-#endif
+#endif __miniTrack__
 

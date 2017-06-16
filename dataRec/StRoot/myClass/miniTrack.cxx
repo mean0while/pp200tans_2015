@@ -80,9 +80,7 @@ miniTrack::miniTrack( StMuTrack *mt )
 bool miniTrack::isGood()
 {
   if (m_id<=0 || m_flag<=0 || m_flag >=1000)
-  {
     return false;
-  }
   return true;
 }
 
@@ -90,9 +88,7 @@ float miniTrack::m2TOF()
 {
   float tm2 = -9.9;
   if (m_matchTOF<1 || m_betaTOF<0.0 || m_betaTOF>1.0)
-  {
     return tm2;
-  }
   // M^2 = p^2[(1/beta)^2 - 1]
   p2 = m_p_last.mag2();
   b2 = m_betaTOF * m_betaTOF;
