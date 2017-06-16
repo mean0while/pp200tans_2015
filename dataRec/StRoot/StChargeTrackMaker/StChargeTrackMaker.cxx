@@ -27,7 +27,6 @@
 #include <stdlib.h>
 
 #include "myClass/miniTrack/miniTrack.h"
-#include "StChargeTrackMaker.h"
 
 
 ClassImp(StChargeTrackMaker)
