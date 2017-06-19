@@ -56,7 +56,7 @@ private:
 public:
   StMiniTrack();
   StMiniTrack( StMuTrack *muTrack );
-  StMiniTrack( const StMiniTrack &miTrack );
+  //StMiniTrack( const StMiniTrack &miTrack );
   virtual ~StMiniTrack() {};
 
   int get_id() const {return m_id;}

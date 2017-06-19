@@ -227,14 +227,16 @@ int StChargeTrackMaker::Make()
 
 	StMiniTrack testMt;
 	LOG_INFO << testMt.get_charge() << endm;
-	
+
 	for (int i = 0; i < m_nptr; ++i)
 	{
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
 		if (checkTrack(mt)) continue;
 		if (mt->pt()<1.0) continue;
 		LOG_INFO << mt->pt() << endm;
+
 		StMiniTrack miniMt(mt);
+		
 		if (miniMt.beyond_nSigma())	continue;
 		if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
