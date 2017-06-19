@@ -41,9 +41,9 @@ void StChargeTrackMaker::InitFile(void)
 	m_OutFile = new TFile(m_OutFn, "recreate");
 }
 
-void StChargeTrackMaker::InitTree(const char *tName)
+void StChargeTrackMaker::InitTree()
 {
-	m_OutTree = new TTree(tName,"Charged Track Information Collection");
+	m_OutTree = new TTree("chargeTrack_tree","Charged Track Information Collection");
 	m_OutTree->SetDirectory(m_OutFile);
 
 	m_OutTree->Branch("runID",&m_runID,"runID/I");
@@ -230,8 +230,8 @@ int StChargeTrackMaker::Make()
 		if (mt->pt()<1.0) continue;
 		miniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma())	continue;
-		if (miniMt.charge()>0) m_vptr_p.push_back(miniMt);
-		if (miniMt.charge()<0) m_vptr_n.push_back(miniMt);
+		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
+		if (mt->charge()<0) m_vptr_n.push_back(miniMt);
 	}
 	m_vptr_p.shrink_to_fit();
 	m_vptr_n.shrink_to_fit();
@@ -243,8 +243,8 @@ int StChargeTrackMaker::Make()
 		if (mt->pt()<0.5) continue;
 		miniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
-		if (miniMt.charge()>0) m_vgtr_p.push_back(miniMt);
-		if (miniMt.charge()<0) m_vgtr_n.push_back(miniMt);
+		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
+		if (mt->charge()<0) m_vgtr_n.push_back(miniMt);
 	}
 	m_vgtr_p.shrink_to_fit();
 	m_vgtr_n.shrink_to_fit();
