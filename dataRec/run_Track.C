@@ -19,9 +19,9 @@ void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_n
     gSystem->Load("StTpcDb");
     gSystem->Load("StDetectorDbMaker");
     gSystem->Load("StDbUtilities");
-    //gSystem->Load("StMcEvent");
-    //gSystem->Load("StMcEventMaker");
-    //gSystem->Load("StMCAsymMaker");
+    gSystem->Load("StMcEvent");
+    gSystem->Load("StMcEventMaker");
+    gSystem->Load("StMCAsymMaker");
 
     gSystem->Load("StDaqLib");
     gSystem->Load("StEmcRawMaker");
@@ -36,12 +36,12 @@ void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_n
     gSystem->Load("StTriggerUtilities");
     gSystem->Load("StTriggerFilterMaker");
 
-//  gSystem->Load("StJetEvent");
+    gSystem->Load("StJetEvent");
     gSystem->Load("StSpinDbMaker");
     gSystem->Load("StEmcTriggerMaker");
     gSystem->Load("StBTofUtil");
 
-    gSystem->Load("myClass");
+    gSystem->Load("StMiniClass");
     gSystem->Load("StChargeTrackMaker");
 
     cout << ">>>======--->\tLoading Libraries Done." << endl;
@@ -54,6 +54,13 @@ void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_n
     muDstMaker->SetStatus("EmcAll" ,1);
 
     StMuDbReader* db = StMuDbReader::instance();
+
+    St_db_Maker *dbMk = new St_db_Maker("StarDb", "MySQL:StarDb");
+    StSpinDbMaker *spDb = new StSpinDbMaker("spinDbMaker");
+
+    StEEmcDbMaker* eemcDb = new StEEmcDbMaker;
+    StEmcADCtoEMaker* adc2e = new StEmcADCtoEMaker;
+    adc2e->saveAllStEvent(true);
 
     StTriggerFilterMaker* filterMaker = new StTriggerFilterMaker;
     filterMaker->addTrigger(480202);  // BHT1*VPDMB-30
@@ -72,13 +79,6 @@ void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_n
     trigSimu->useBemc();
     trigSimu->useEemc();
     trigSimu->bemc->setConfig(StBemcTriggerSimu::kOnline);
-
-    St_db_Maker *dbMk = new St_db_Maker("StarDb", "MySQL:StarDb");
-    StSpinDbMaker *spDb = new StSpinDbMaker("spinDbMaker");
-
-    StEEmcDbMaker* eemcDb = new StEEmcDbMaker;
-    StEmcADCtoEMaker* adc2e = new StEmcADCtoEMaker;
-    adc2e->saveAllStEvent(true);
 
     StChargeTrackMaker *chargeTrackMaker = new StChargeTrackMaker("chargeTrack", muDstMaker, fout_name);
     
