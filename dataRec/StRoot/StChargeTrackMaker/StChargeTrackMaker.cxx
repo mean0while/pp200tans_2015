@@ -229,7 +229,7 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<1,0) continue;
+		if (mt->pt()<1.0) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma())	continue;
 		if (miniMt.dcaXY()>1.5) continue;
