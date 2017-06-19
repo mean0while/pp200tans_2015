@@ -80,15 +80,15 @@ bool StMiniTrack::isGood()
 {
   if (m_id<=0 || m_flag<=0 || m_flag>=1000 || m_nHitsFit<15)
     return false;
+  if (float(m_nHitsFit)/float(m_nHitsPos)<0.51)
+    return false;
   return true;
 }
 
 bool StMiniTrack::beyond_nSigma()
 {
   if (fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0 && fabs(m_nSigmaProton)>3.0)
-  {
     return true;
-  }
   return false;
 }
 
