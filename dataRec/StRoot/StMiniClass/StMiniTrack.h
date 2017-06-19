@@ -1,5 +1,5 @@
-#ifndef __StMiniTrack__
-#define __StMiniTrack__
+#ifndef _StMiniTrack_
+#define _StMiniTrack_
 
 
 #include "TObject.h"
