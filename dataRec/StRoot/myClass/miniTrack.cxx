@@ -98,8 +98,8 @@ double miniTrack::m2TOF()
   if (m_matchTOF<1 || m_betaTOF<0.0 || m_betaTOF>1.0)
     return tm2;
   // M^2 = p^2[(1/beta)^2 - 1]
-  p2 = m_p_last.mag2();
-  b2 = m_betaTOF * m_betaTOF;
+  double p2 = m_p_last.mag2();
+  double b2 = m_betaTOF * m_betaTOF;
   tm2 = p2 * ( (1 / b2) -1 );
   return tm2;
 }
