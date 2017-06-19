@@ -25,7 +25,6 @@ miniTrack::miniTrack(): TObject()
   m_pidPion = -999.9;
   m_pidProton = -999.9;
 
-  m_dca = -999.9;
   m_yPid[0] = -999.9;
   m_yPid[1] = -999.9;
   m_yPid[2] = -999.9;
@@ -93,9 +92,9 @@ bool miniTrack::beyond_nSigma()
   return false;
 }
 
-float miniTrack::m2TOF()
+double miniTrack::m2TOF()
 {
-  float tm2 = -9.9;
+  double tm2 = -9.9;
   if (m_matchTOF<1 || m_betaTOF<0.0 || m_betaTOF>1.0)
     return tm2;
   // M^2 = p^2[(1/beta)^2 - 1]
