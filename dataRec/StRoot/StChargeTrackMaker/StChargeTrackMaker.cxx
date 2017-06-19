@@ -225,6 +225,9 @@ int StChargeTrackMaker::Make()
 	LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
 	mH_pvz1->Fill(m_pvz);
 
+	StMiniTrack testMt;
+	LOG_INFO << testMt.get_charge() << endm;
+	
 	for (int i = 0; i < m_nptr; ++i)
 	{
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
