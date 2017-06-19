@@ -27,7 +27,7 @@
 #include <fstream>
 #include <stdlib.h>
 
-//#include "StMiniClass/StMiniTrack.h"
+#include "StMiniClass/StMiniTrack.h"
 #include "StChargeTrackMaker.h"
 
 

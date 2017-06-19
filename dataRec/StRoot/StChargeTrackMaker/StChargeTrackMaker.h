@@ -3,6 +3,7 @@
 
 #include "StMiniClass/StMiniTrack.h"
 #include "StMaker.h"
+#include <vector>
 
 
 class TFile;
