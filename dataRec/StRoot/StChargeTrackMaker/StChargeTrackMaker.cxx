@@ -5,6 +5,7 @@
 //#include "TChain.h"
 #include "TSystem.h"
 #include "TFile.h"
+#include "TTree.h"
 #include "TMemStat.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/StHelix.hh"
