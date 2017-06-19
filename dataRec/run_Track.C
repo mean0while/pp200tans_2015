@@ -1,5 +1,5 @@
 
-void run_chargeTrack( int nEvts=10, const char* fin_name="in.root", const char *fout_name="out.root")
+void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_name="out.root")
 {
     TDatime *cTime = new TDatime;
     cout << "\n>>>======--->\tStart Date and Time\t<---======<<<\n";
@@ -19,15 +19,15 @@ void run_chargeTrack( int nEvts=10, const char* fin_name="in.root", const char *
     gSystem->Load("StTpcDb");
     gSystem->Load("StDetectorDbMaker");
     gSystem->Load("StDbUtilities");
-//  gSystem->Load("StMcEvent");
-//  gSystem->Load("StMcEventMaker");
-//  gSystem->Load("StMCAsymMaker");
+    //gSystem->Load("StMcEvent");
+    //gSystem->Load("StMcEventMaker");
+    //gSystem->Load("StMCAsymMaker");
 
     gSystem->Load("StDaqLib");
     gSystem->Load("StEmcRawMaker");
     gSystem->Load("StEmcADCtoEMaker");
     gSystem->Load("StEpcMaker");
-//  gSystem->Load("StEmcSimulatorMaker");
+    gSystem->Load("StEmcSimulatorMaker");
     gSystem->Load("StDbLib");
     gSystem->Load("StDbBroker");
     gSystem->Load("St_db_Maker");
@@ -65,8 +65,16 @@ void run_chargeTrack( int nEvts=10, const char* fin_name="in.root", const char *
     filterMaker->addTrigger(480405);  // JP2*L2JetHigh
     filterMaker->addTrigger(480415);
 
+    StTriggerSimuMaker* trigSimu = new StTriggerSimuMaker("trigSimuMaker");
+    trigSimu->SetDebug(0);
+    trigSimu->useOnlineDB();
+    trigSimu->setMC(false);
+    trigSimu->useBemc();
+    trigSimu->useEemc();
+    trigSimu->bemc->setConfig(StBemcTriggerSimu::kOnline);
+
     St_db_Maker *dbMk = new St_db_Maker("StarDb", "MySQL:StarDb");
-    StSpinDbMaker *spDb = new StSpinDbMaker("spinDb");
+    StSpinDbMaker *spDb = new StSpinDbMaker("spinDbMaker");
 
     StEEmcDbMaker* eemcDb = new StEEmcDbMaker;
     StEmcADCtoEMaker* adc2e = new StEmcADCtoEMaker;
