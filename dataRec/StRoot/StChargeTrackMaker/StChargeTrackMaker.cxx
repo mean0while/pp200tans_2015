@@ -108,7 +108,7 @@ int StChargeTrackMaker::Init()
 	mH_pvz0 = new TH1D("h_pvz0","h_pvz0",200,-100.0,100.0);
 	mH_pvz1 = new TH1D("h_pvz1","h_pvz1",200,-100.0,100.0);
 
-	m_SpinDbMaker = (StSpinDbMaker*)GetMaker("spinDb");
+	m_SpinDbMaker = (StSpinDbMaker*)GetMaker("spinDbMaker");
 	assert(m_SpinDbMaker);
 
 	m_TrigSimuMaker = (StTriggerSimuMaker*)GetMaker("trigSimuMaker");
