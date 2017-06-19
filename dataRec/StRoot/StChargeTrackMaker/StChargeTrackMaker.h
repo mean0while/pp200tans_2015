@@ -1,5 +1,5 @@
-#ifndef __StChargeRecMaker_h__
-#define __StChargeRecMaker_h__
+#ifndef __StChargeTrackMaker_h__
+#define __StChargeTrackMaker_h__
 
 #include "myClass/miniTrack.h"
 #include "StMaker.h"
@@ -23,7 +23,7 @@ private:
 	StSpinDbMaker       *m_SpinDbMaker;
 	StTriggerSimuMaker  *m_TrigSimuMaker;
 
-	cosnt char *m_OutFn;
+	const char *m_OutFn;
 	TFile *m_OutFile;
 
 	TTree *m_OutTree;
@@ -74,3 +74,5 @@ public:
 	bool checkTrack( StMuTrack* );
 
 }
+
+#endif

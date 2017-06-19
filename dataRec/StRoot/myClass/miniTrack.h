@@ -6,7 +6,7 @@
 #include "TArrayI.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/StHelix.hh"
-#include "StarClassLibrary/StThreeVectorD.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuBTofHit.h"
@@ -65,7 +65,7 @@ public:
   int get_charge() const {return m_charge;}
   int get_nHitsFit() const {return m_nHitsFit;}
   int get_nHitsPos() const {return m_nHitsPos;}
-  double get_dca() const {return m_dca;}
+
   double get_dEdx() const {return m_dEdx;}
   double get_nSigmaElectron() const {return m_nSigmaElectron;}
   double get_nSigmaKaon() const {return m_nSigmaKaon;}
@@ -84,9 +84,11 @@ public:
   int get_matchBEMC() const {return m_matchBEMC;}
   double get_energyBEMC() const {return m_energyBEMC;}
   int get_towerBEMC(int index) const {return m_towerBEMC.At(index);}
-  StThreeVectorD get_p_pv() const {return m_p_pv;}
-  StThreeVectorD get_p_first() const {return m_p_first;}
-  StThreeVectorD get_p_last() const {return m_p_last;}
+  
+  StThreeVectorF get_dca() const {return m_dca;}
+  StThreeVectorF get_p_pv() const {return m_p_pv;}
+  StThreeVectorF get_p_first() const {return m_p_first;}
+  StThreeVectorF get_p_last() const {return m_p_last;}
   StPhysicalHelixD get_helix() const {return m_helix;}
 
   bool isGood();
@@ -95,5 +97,5 @@ public:
   ClassDef(miniTrack,1)
 };
 
-#endif __miniTrack__
+#endif
 
