@@ -71,7 +71,7 @@ miniTrack::miniTrack( StMuTrack *mt )
   m_matchTOF = btofPid.matchFlag();
   m_betaTOF = btofPid.beta();
 
-  m_matchBEMC = mt->matchEMC():
+  m_matchBEMC = mt->matchBEMC();
   m_energyBEMC = mt->energyBEMC();
   m_towerBEMC = mt->getTower(0,1);
 }
