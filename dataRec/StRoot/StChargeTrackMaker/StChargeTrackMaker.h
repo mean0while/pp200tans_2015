@@ -70,7 +70,7 @@ public:
 
 	void InitFile(void);
 	void FinishFile(void);
-	void InitTree(const char *tName);
+	void InitTree();
 	void vClear(void);
 	bool checkTrack( StMuTrack* );
 
