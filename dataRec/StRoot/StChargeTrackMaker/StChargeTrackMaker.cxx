@@ -186,7 +186,7 @@ int StChargeTrackMaker::Make()
 	if (m_SpinDbMaker->isMaskedUsingBX48(m_bx48)) return kStSkip;
 	if (m_SpinDbMaker->isPolDirLong()) m_spin = 1;
 	if (m_SpinDbMaker->isPolDirTrans()) m_spin = 2;
-	if (spin!=2) return kStSkip;
+	if (m_spin!=2) return kStSkip;
 	m_spinbit = m_SpinDbMaker->spin4usingBX7(m_bx7);
 	m_spinbit8 = m_SpinDbMaker->spin8usingBX7(m_bx7);
 	if (m_spinbit!=5 && m_spinbit!=6 && m_spinbit!=9 && m_spinbit!=10) return kStSkip;
@@ -222,15 +222,17 @@ int StChargeTrackMaker::Make()
 	if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
 	mH_pvz0->Fill(m_pvz);
 	if (fabs(m_pvz)>60.0) return kStSkip;
+	LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
 	mH_pvz1->Fill(m_pvz);
 
 	for (int i = 0; i < m_nptr; ++i)
 	{
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<1.0) continue;
+		if (mt->pt()<1,0) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma())	continue;
+		if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vptr_n.push_back(miniMt);
 	}
@@ -241,9 +243,10 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<0.5) continue;
+		if (mt->pt()<1.0) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
+		if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vgtr_n.push_back(miniMt);
 	}

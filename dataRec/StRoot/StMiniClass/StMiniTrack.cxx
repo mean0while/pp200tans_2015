@@ -83,9 +83,13 @@ bool StMiniTrack::isGood()
   return true;
 }
 
+float StMiniTrack::dcaXY()
+{
+  
+}
 bool StMiniTrack::beyond_nSigma()
 {
-  if (fabs(m_nSigmaElectron)>3.0 && fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0 && fabs(m_nSigmaProton)>3.0)
+  if (fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0)
   {
     return true;
   }

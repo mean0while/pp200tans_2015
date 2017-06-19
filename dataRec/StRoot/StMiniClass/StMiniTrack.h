@@ -91,6 +91,7 @@ public:
   StThreeVectorF get_p_last() const {return m_p_last;}
   StPhysicalHelixD get_helix() const {return m_helix;}
 
+  float dcaXY() const {return m_dca.perp();}
   bool isGood();
   bool beyond_nSigma();
   double m2TOF();
