@@ -1,7 +1,7 @@
 #ifndef __StChargeTrackMaker_h__
 #define __StChargeTrackMaker_h__
 
-#include "myClass/miniTrack.h"
+#include "StMiniClass/StMiniTrack.h"
 #include "StMaker.h"
 
 
@@ -11,7 +11,7 @@ class StMuDst;
 class StMuDstMaker;
 class StSpinDbMaker;
 class StTriggerSimuMaker;
-class miniTrack;
+class StMiniTrack;
 
 using namespace std;
 
@@ -53,10 +53,10 @@ private:
 	int m_IsJP2;
 	int m_IsL2J;
 
-	vector<miniTrack> m_vptr_p;
-	vector<miniTrack> m_vptr_n;
-	vector<miniTrack> m_vgtr_p;
-	vector<miniTrack> m_vgtr_n;
+	vector<StMiniTrack> m_vptr_p;
+	vector<StMiniTrack> m_vptr_n;
+	vector<StMiniTrack> m_vgtr_p;
+	vector<StMiniTrack> m_vgtr_n;
 
 	TH1D *mH_pvz0;
 	TH1D *mH_pvz1;
@@ -73,6 +73,8 @@ public:
 	void InitTree();
 	void vClear(void);
 	bool checkTrack( StMuTrack* );
+
+	ClassDef(StChargeTrackMaker,1)
 
 };
 

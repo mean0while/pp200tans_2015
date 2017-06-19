@@ -27,7 +27,7 @@
 #include <fstream>
 #include <stdlib.h>
 
-#include "myClass/miniTrack.h"
+#include "StMiniClass/StMiniTrack.h"
 #include "StChargeTrackMaker.h"
 
 
@@ -108,7 +108,7 @@ int StChargeTrackMaker::Init()
 	mH_pvz0 = new TH1D("h_pvz0","h_pvz0",200,-100.0,100.0);
 	mH_pvz1 = new TH1D("h_pvz1","h_pvz1",200,-100.0,100.0);
 
-	m_SpinDbMaker = (StSpinDbMaker*)GetMaker("spinDbMaker");
+	m_SpinDbMaker = (StSpinDbMaker*)GetMaker("spinDb");
 	assert(m_SpinDbMaker);
 
 	m_TrigSimuMaker = (StTriggerSimuMaker*)GetMaker("trigSimuMaker");
@@ -229,7 +229,7 @@ int StChargeTrackMaker::Make()
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
 		if (checkTrack(mt)) continue;
 		if (mt->pt()<1.0) continue;
-		miniTrack miniMt(mt);
+		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma())	continue;
 		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vptr_n.push_back(miniMt);
@@ -242,7 +242,7 @@ int StChargeTrackMaker::Make()
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
 		if (mt->pt()<0.5) continue;
-		miniTrack miniMt(mt);
+		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vgtr_n.push_back(miniMt);

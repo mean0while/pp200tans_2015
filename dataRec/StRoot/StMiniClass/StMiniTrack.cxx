@@ -1,12 +1,12 @@
 
-#include "miniTrack.h"
+#include "StMiniTrack.h"
 #include "TROOT.h"
 #include "TClass.h"
 
 
-ClassImp(miniTrack)
+ClassImp(StMiniTrack)
 
-miniTrack::miniTrack(): TObject()
+StMiniTrack::StMiniTrack(): TObject()
 {
   m_id = 0;
   m_type = 0; 
@@ -36,7 +36,7 @@ miniTrack::miniTrack(): TObject()
   m_energyBEMC = -999.9;
 }
 
-miniTrack::miniTrack( StMuTrack *mt )
+StMiniTrack::StMiniTrack( StMuTrack *mt )
 {
   m_id = mt->id();
   m_flag = mt->flag();
@@ -76,14 +76,14 @@ miniTrack::miniTrack( StMuTrack *mt )
   m_towerBEMC = mt->getTower(0,1);
 }
 
-bool miniTrack::isGood()
+bool StMiniTrack::isGood()
 {
   if (m_id<=0 || m_flag<=0 || m_flag >=1000)
     return false;
   return true;
 }
 
-bool miniTrack::beyond_nSigma()
+bool StMiniTrack::beyond_nSigma()
 {
   if (fabs(m_nSigmaElectron)>3.0 && fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0 && fabs(m_nSigmaProton)>3.0)
   {
@@ -92,7 +92,7 @@ bool miniTrack::beyond_nSigma()
   return false;
 }
 
-double miniTrack::m2TOF()
+double StMiniTrack::m2TOF()
 {
   double tm2 = -9.9;
   if (m_matchTOF<1 || m_betaTOF<0.0 || m_betaTOF>1.0)

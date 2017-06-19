@@ -1,5 +1,5 @@
-#ifndef __miniTrack__
-#define __miniTrack__
+#ifndef __StMiniTrack__
+#define __StMiniTrack__
 
 
 #include "TObject.h"
@@ -15,7 +15,7 @@
 #include "StBTofUtil/StV0TofCorrection.h"
 
 
-class miniTrack : public TObject {
+class StMiniTrack : public TObject {
 
 private:
   int m_id;
@@ -54,10 +54,10 @@ private:
   TArrayI m_towerBEMC;
 
 public:
-  miniTrack();
-  miniTrack( StMuTrack *muTrack );
-  miniTrack( const miniTrack &miTrack );
-  virtual ~miniTrack() {};
+  StMiniTrack();
+  StMiniTrack( StMuTrack *muTrack );
+  StMiniTrack( const StMiniTrack &miTrack );
+  virtual ~StMiniTrack() {};
 
   int get_id() const {return m_id;}
   int get_type() const {return m_type;}
@@ -95,7 +95,7 @@ public:
   bool beyond_nSigma();
   double m2TOF();
 
-  ClassDef(miniTrack,1)
+  ClassDef(StMiniTrack,1)
 };
 
 #endif
