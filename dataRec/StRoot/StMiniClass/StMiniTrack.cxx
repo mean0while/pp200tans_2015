@@ -36,7 +36,7 @@ StMiniTrack::StMiniTrack(): TObject()
   m_energyBEMC = -999.9;
 }
 
-StMiniTrack::StMiniTrack( StMuTrack *mt )
+StMiniTrack::StMiniTrack( StMuTrack *mt ) : TObject()
 {
   m_id = mt->id();
   m_flag = mt->flag();
