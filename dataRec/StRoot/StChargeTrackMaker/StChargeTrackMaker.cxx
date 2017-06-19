@@ -183,13 +183,13 @@ int StChargeTrackMaker::Make()
 	m_spinbit = -1;
 	m_spinbit8 = -1;
 	if (m_SpinDbMaker->isMaskedUsingBX48(m_bx48)) return kStSkip;
-	if (m_SpinDbMaker->isPolDirLong()) spin = 1;
-	if (m_SpinDbMaker->isPolDirTrans()) spin = 2;
+	if (m_SpinDbMaker->isPolDirLong()) m_spin = 1;
+	if (m_SpinDbMaker->isPolDirTrans()) m_spin = 2;
 	if (spin!=2) return kStSkip;
 	m_spinbit = m_SpinDbMaker->spin4usingBX7(m_bx7);
 	m_spinbit8 = m_SpinDbMaker->spin8usingBX7(m_bx7);
 	if (m_spinbit!=5 && m_spinbit!=6 && m_spinbit!=9 && m_spinbit!=10) return kStSkip;
-	StRunInfo & runinfo = muEvent->runInfo();
+	StRunInfo & runInfo = muEvent->runInfo();
 	m_bbcrate = runInfo.bbcCoincidenceRate();
 	m_zdcrate = runInfo.zdcCoincidenceRate();
 
@@ -199,69 +199,59 @@ int StChargeTrackMaker::Make()
 	StTriggerId nominal = muEvent->triggerIdCollection().nominal();
 
 	if (nominal.isTrigger(480202)) m_trig[0]=1; // BHT1*VPDMB-30
-    if (nominal.isTrigger(480206)) m_trig[1]=1; // BHT1*VPDMB-30-nobsmd
-    if (nominal.isTrigger(480404)||nominal.isTrigger(480414)) m_trig[2]=1; // JP1
-    if (nominal.isTrigger(480401)||nominal.isTrigger(480411)) m_trig[3]=1; // JP2
-    if (nominal.isTrigger(480405)||nominal.isTrigger(480415)) m_trig[4]=1; // JP2*L2JetHigh
+	if (nominal.isTrigger(480206)) m_trig[1]=1; // BHT1*VPDMB-30-nobsmd
+	if (nominal.isTrigger(480404)||nominal.isTrigger(480414)) m_trig[2]=1; // JP1
+	if (nominal.isTrigger(480401)||nominal.isTrigger(480411)) m_trig[3]=1; // JP2
+	if (nominal.isTrigger(480405)||nominal.isTrigger(480415)) m_trig[4]=1; // JP2*L2JetHigh
 
-    if ( !(trig[0]+trig[1]+trig[2]+trig[3]+trig[4]) ) return kStSkip;
+	if ( !(m_trig[0]+m_trig[1]+m_trig[2]+m_trig[3]+m_trig[4]) ) return kStSkip;
 
-    m_npv = m_MuDst->numberOfPrimaryVertices();
-    for (int i = 0; i < npv; ++i)
-    {
-    	StMuPrimaryVertex *mupv = m_MuDst->primaryVertex(i);
-    	StThreeVectorF posV = mupv->position();
-    	m_npvrank[i] = mupv->ranking();
-    	m_npvz[i] = posV.z();
-    }
-    if (m_npvrank[0]<0) return kStSkip;
+	m_npv = m_MuDst->numberOfPrimaryVertices();
+	for (int i = 0; i < m_npv; ++i)
+	{
+		StMuPrimaryVertex *mupv = m_MuDst->primaryVertex(i);
+		StThreeVectorF posV = mupv->position();
+		m_npvrank[i] = mupv->ranking();
+		m_npvz[i] = posV.z();
+	}
+	if (m_npvrank[0]<0) return kStSkip;
 
-    m_nptr = m_MuDst->numberOfPrimaryTracks();
-    m_ngtr = m_MuDst->numberOfGlobalTracks();
-    if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
-    mH_pvz0->Fill(m_pvz);
-    if (fabs(m_pvz)>60.0) return kStSkip;
-    mH_pvz1->Fill(m_pvz);
+	m_nptr = m_MuDst->numberOfPrimaryTracks();
+	m_ngtr = m_MuDst->numberOfGlobalTracks();
+	if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
+	mH_pvz0->Fill(m_pvz);
+	if (fabs(m_pvz)>60.0) return kStSkip;
+	mH_pvz1->Fill(m_pvz);
 
-    for (int i = 0; i < m_nptr; ++i)
-    {
-    	StMuTrack *mt = m_MuDst->primaryTracks(i);
-    	if (checkTrack(mt)) continue;
-    	if (mt->pt()<1.0) continue;
-    	miniTrack miniMt(mt);
-    	t_nSigmaElectron = miniMt.get_nSigmaElectron();
-    	t_nSigmaPion = miniMt.get_nSigmaPion();
-    	t_nSigmaKaon = miniMt.get_nSigmaKaon();
-    	t_nSigmaProton = miniMt.get_nSigmProton();
-    	if (fabs(t_nSigmaProton)>3.0 && fabs(t_nSigmaPion)>3.0 && fabs(t_nSigmaKaon)>3.0 && fabs(t_nSigmaElectron)>3.0)
-    		continue;
-    	if (miniMt->charge()>0) m_vptr_p.push_back(miniMt);
-    	if (miniMt->charge()<0) m_vptr_n.push_back(miniMt);
-    }
-    m_vptr_p.shrink_to_fit();
-    m_vptr_n.shrink_to_fit();
+	for (int i = 0; i < m_nptr; ++i)
+	{
+		StMuTrack *mt = m_MuDst->primaryTracks(i);
+		if (checkTrack(mt)) continue;
+		if (mt->pt()<1.0) continue;
+		miniTrack miniMt(mt);
+		if (miniMt.beyond_nSigma())	continue;
+		if (miniMt.charge()>0) m_vptr_p.push_back(miniMt);
+		if (miniMt.charge()<0) m_vptr_n.push_back(miniMt);
+	}
+	m_vptr_p.shrink_to_fit();
+	m_vptr_n.shrink_to_fit();
 
-    for (int i = 0; i < m_ngtr; ++i)
-    {
-    	StMuTrack *mt = m_MuDst->globalTracks(i);
-    	if (checkTrack(mt)) continue;
-    	if (mt->pt()<0.5) continue;
-    	miniTrack miniMt(mt);
-    	t_nSigmaElectron = miniMt.get_nSigmaElectron();
-    	t_nSigmaPion = miniMt.get_nSigmaPion();
-    	t_nSigmaKaon = miniMt.get_nSigmaKaon();
-    	t_nSigmaProton = miniMt.get_nSigmProton();
-    	if (fabs(t_nSigmaProton)>3.0 && fabs(t_nSigmaPion)>3.0 && fabs(t_nSigmaKaon)>3.0 && fabs(t_nSigmaElectron)>3.0)
-    		continue;
-    	if (miniMt->charge()>0) m_vgtr_p.push_back(miniMt);
-    	if (miniMt->charge()<0) m_vgtr_n.push_back(miniMt);
-    }
-    m_vgtr_p.shrink_to_fit();
-    m_vgtr_n.shrink_to_fit();
+	for (int i = 0; i < m_ngtr; ++i)
+	{
+		StMuTrack *mt = m_MuDst->globalTracks(i);
+		if (checkTrack(mt)) continue;
+		if (mt->pt()<0.5) continue;
+		miniTrack miniMt(mt);
+		if (miniMt.beyond_nSigma()) continue;
+		if (miniMt.charge()>0) m_vgtr_p.push_back(miniMt);
+		if (miniMt.charge()<0) m_vgtr_n.push_back(miniMt);
+	}
+	m_vgtr_p.shrink_to_fit();
+	m_vgtr_n.shrink_to_fit();
 
-    m_OutTree->Fill();
+	m_OutTree->Fill();
 
-    return kStOk;
+	return kStOk;
 }
 
 

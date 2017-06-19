@@ -92,6 +92,7 @@ public:
   StPhysicalHelixD get_helix() const {return m_helix;}
 
   bool isGood();
+  bool beyond_nSigma();
   double m2TOF();
 
   ClassDef(miniTrack,1)

@@ -84,6 +84,15 @@ bool miniTrack::isGood()
   return true;
 }
 
+bool miniTrack::beyond_nSigma()
+{
+  if (fabs(m_nSigmaElectron)>3.0 && fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0 && fabs(m_nSigmaProton)>3.0)
+  {
+    return true;
+  }
+  return false;
+}
+
 float miniTrack::m2TOF()
 {
   float tm2 = -9.9;

@@ -73,6 +73,6 @@ public:
 	void vClear(void);
 	bool checkTrack( StMuTrack* );
 
-}
+};
 
 #endif
