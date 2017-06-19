@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<job datasetSplitting="eventBased" maxEvents="5000" splitBy="filename" fileListSyntax="xrootd" simulateSubmission="false">
+
+<command>
+starver SL16d
+limit coredumpsize 0
+pwd
+
+foreach mudstfile ( `awk '{ print $1 }' $FILELIST` )
+   set outfile = `basename $mudstfile .MuDst.root`.track.root
+   root4star -q -b run_Track.C\(1e6,\"$mudstfile\",\"$outfile\"\)
+end
+
+</command>
+
+<input URL="catalog:star.bnl.gov?production=P16id,trgsetupname~production_pp200trans_2015,filetype=daq_reco_MuDst,filename~st_physics_160,tpx=1,tof=1,emc=1,eemc=1,sanity=1,runnumber=&runnumber;" nFiles="all" preferStorage="local"/>
+
+<stdout URL="file:/star/u/jcmei/pp200trans_2015/dataRec/data/&runnumber;/out/&runnumber;.$JOBINDEX.out" />
+<stderr URL="file:/star/u/jcmei/pp200trans_2015/dataRec/data/&runnumber;/err/&runnumber;.$JOBINDEX.err" />
+<!--<stdout discard="true" />-->
+<output fromScratch="*.track.root" toURL="file:/star/u/jcmei/pp200trans_2015/dataRec/data/&runnumber;/" />
+
+<SandBox installer="ZIP">
+	<Package name="track_Library">
+		<File>file:/star/u/jcmei/pp200trans_2015/dataRec/.sl64_gcc482</File>
+		<File>file:/star/u/jcmei/pp200trans_2015/dataRec/StRoot</File>
+		<File>file:/star/u/jcmei/pp200trans_2015/dataRec/run_Track.C</File>
+	</Package>
+</SandBox>
+
+</job>
