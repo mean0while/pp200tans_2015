@@ -10,7 +10,7 @@
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/StHelix.hh"
 #include "StarClassLibrary/StThreeVectorD.hh"
-#include "StarClassLibrary/StLorentzVector.hh"
+#include "StarClassLibrary/StLorentzVectorD.hh"
 #include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
@@ -21,6 +21,10 @@
 #include "StSpinPool/StSpinDbMaker/StSpinDbMaker.h"
 #include "StEmcTriggerMaker/StEmcTriggerMaker.h"
 #include "StEmcTriggerMaker/StBemcTrigger.h"
+#include "StTriggerUtilities/StTriggerSimuMaker.h"
+#include "StTriggerUtilities/Bemc/StBemcTriggerSimu.h"
+#include "StTriggerUtilities/Eemc/StEemcTriggerSimu.h"
+#include "StTriggerUtilities/Emc/StEmcTriggerSimu.h"
 
 #include "StBTofUtil/StV0TofCorrection.h"
 
@@ -109,7 +113,7 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("dca2_K",&m_dca2_K);
 }
 
-void Add_poolTrigID(int tID)
+void StChargeTrackMaker::Add_poolTrigID(int tID)
 {
 	pool_trigID.push_back(tID);
 }
@@ -265,9 +269,9 @@ int StChargeTrackMaker::Make()
 
 	StTriggerId nominal = muEvent->triggerIdCollection().nominal();
 	int sum_Trig = 0;
-	for (int i = 0; i < pool_trigID.size(); ++i)
+	for (vector<int>::iterator i = pool_trigID.begin(); i != pool_trigID.end(); ++i)
 	{
-		int tID = pool_trigID[i];
+		int tID = *i;
 		if (nominal.isTrigger(tID)) m_Trig[tID] = true;
 		if (m_TrigSimuMaker->isTrigger(tID)) m_TrigSoft[tID] = true;
 		sum_Trig = m_Trig[tID] + sum_Trig;
@@ -351,8 +355,8 @@ int StChargeTrackMaker::Make()
 			if (dca2_v0>2.0) continue;
 
 			StThreeVectorD v3_v0position = (v3_tp + v3_tn) / 2.0;
-			StLorentzVector v4_tp(v3_tp);
-			StLorentzVector v4_tn(v3_tn);
+			StLorentzVectorD v4_tp(v3_tp);
+			StLorentzVectorD v4_tn(v3_tn);
 			StThreeVectorD v3_decay = v3_v0position - pv_position;
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
@@ -361,7 +365,7 @@ int StChargeTrackMaker::Make()
 			{
 				v4_tp.setE(v3_tp*v3_tp + c_massProton*c_massProton);
 				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
-				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
 				double mass_v0 = v4_v0.m();
 				if (mass_v0>1.06 && mass_v0<=1.18)
 				{	
@@ -379,7 +383,7 @@ int StChargeTrackMaker::Make()
 			{
 				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
 				v4_tn.setE(v3_tn*v3_tn + c_massProton*c_massProton);
-				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
 				double mass_v0 = v4_v0.m();
 
 				if (mass_v0>1.06 && mass_v0<=1.18)
@@ -398,7 +402,7 @@ int StChargeTrackMaker::Make()
 			{
 				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
 				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
-				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
 				double mass_v0 = v4_v0.m();
 
 				if (mass_v0>0.42 && mass_v0<=0.58)
