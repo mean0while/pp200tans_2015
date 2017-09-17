@@ -355,8 +355,10 @@ int StChargeTrackMaker::Make()
 			if (dca2_v0>2.0) continue;
 
 			StThreeVectorD v3_v0position = (v3_tp + v3_tn) / 2.0;
-			StLorentzVectorD v4_tp(v3_tp);
-			StLorentzVectorD v4_tn(v3_tn);
+			StLorentzVectorD v4_tp;
+			v4_tp.setVec(v3_tp);
+			StLorentzVectorD v4_tn;
+			v4_tn.setVec(v3_tn);
 			StThreeVectorD v3_decay = v3_v0position - pv_position;
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
