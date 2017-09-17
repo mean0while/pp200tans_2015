@@ -29,6 +29,8 @@
 #include <algorithm>
 #include <cmath>
 #include <iterator>
+#include <vector>
+#include <map>
 
 #include "StMiniClass/StMiniTrack.h"
 #include "StChargeTrackMaker.h"

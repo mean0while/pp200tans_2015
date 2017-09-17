@@ -14,17 +14,19 @@ class StMuDstMaker;
 class StSpinDbMaker;
 class StTriggerSimuMaker;
 class StMiniTrack;
+class vector;
+class map;
 
-using namespace std::vector;
-using namespace std::map;
+using namespace std;
 
+static double c_massPion     = 0.139570;
+static double c_massProton   = 0.938272;
+static double c_masskaon     = 0.493677;
+static double c_massElectron = 0.000511;
 
 class StChargeTrackMaker : public StMaker {
 private:
-	static double c_massPion     = 0.139570;
-	static double c_massProton   = 0.938272;
-	static double c_masskaon     = 0.493677;
-	static double c_massElectron = 0.000511;
+	
 
 	StMuDst             *m_MuDst;
 	StMuDstMaker        *m_MuDstMaker;
@@ -56,43 +58,43 @@ private:
 	int m_ngtr;
 	int m_npv;
 
-	std::vector<int>    m_nPVrank;
-	std::vector<double> m_nPVz;
+	vector<int>    m_nPVrank;
+	vector<double> m_nPVz;
 
-	std::map<int, bool> m_Trig;
-	std::map<int, bool> m_TrigSoft;
+	map<int, bool> m_Trig;
+	map<int, bool> m_TrigSoft;
 
-	std::vector<StMiniTrack> m_vptr_p;
-	std::vector<StMiniTrack> m_vptr_n;
-	std::vector<StMiniTrack> m_vgtr_p;
-	std::vector<StMiniTrack> m_vgtr_n;
+	vector<StMiniTrack> m_vptr_p;
+	vector<StMiniTrack> m_vptr_n;
+	vector<StMiniTrack> m_vgtr_p;
+	vector<StMiniTrack> m_vgtr_n;
 
-	std::vector<double>   m_cosrp_L;
-	std::vector<double>   m_openAngle_L;
-	std::vector<double>   m_im_L;
-	std::vector<int>      m_id_Lp;
-	std::vector<int>      m_id_Lpi;
-	std::vector<TVector3> m_v3_L;
-	std::vector<TVector3> m_v0_L;
-	std::vector<double>   m_dca2_L;
+	vector<double>   m_cosrp_L;
+	vector<double>   m_openAngle_L;
+	vector<double>   m_im_L;
+	vector<int>      m_id_Lp;
+	vector<int>      m_id_Lpi;
+	vector<TVector3> m_v3_L;
+	vector<TVector3> m_v0_L;
+	vector<double>   m_dca2_L;
 
-	std::vector<double>   m_cosrp_A;
-	std::vector<double>   m_openAngle_A;
-	std::vector<double>   m_im_A;
-	std::vector<int>      m_id_Ap;
-	std::vector<int>      m_id_Api;
-	std::vector<TVector3> m_v3_A;
-	std::vector<TVector3> m_v0_A;
-	std::vector<double>   m_dca2_A;
+	vector<double>   m_cosrp_A;
+	vector<double>   m_openAngle_A;
+	vector<double>   m_im_A;
+	vector<int>      m_id_Ap;
+	vector<int>      m_id_Api;
+	vector<TVector3> m_v3_A;
+	vector<TVector3> m_v0_A;
+	vector<double>   m_dca2_A;
 
-	std::vector<double>   m_cosrp_K;
-	std::vector<double>   m_openAngle_K;
-	std::vector<double>   m_im_K;
-	std::vector<int>      m_id_Kp;
-	std::vector<int>      m_id_Kpi;
-	std::vector<TVector3> m_v3_K;
-	std::vector<TVector3> m_v0_K;
-	std::vector<double>   m_dca2_K;
+	vector<double>   m_cosrp_K;
+	vector<double>   m_openAngle_K;
+	vector<double>   m_im_K;
+	vector<int>      m_id_Kp;
+	vector<int>      m_id_Kpi;
+	vector<TVector3> m_v3_K;
+	vector<TVector3> m_v0_K;
+	vector<double>   m_dca2_K;
 
 	TH1D *m_H_pvz0;
 	TH1D *m_H_pvz1;
