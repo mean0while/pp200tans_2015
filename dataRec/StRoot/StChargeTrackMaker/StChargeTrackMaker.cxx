@@ -10,6 +10,7 @@
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/StHelix.hh"
 #include "StarClassLibrary/StThreeVectorD.hh"
+#include "StarClassLibrary/StLorentzVector.hh"
 #include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
