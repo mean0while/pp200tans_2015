@@ -172,8 +172,8 @@ int StChargeTrackMaker::Init()
 	InitFile();
 	InitTree();
 
-	mH_pvz0 = new TH1D("h_pvz0","h_pvz0",200,-100.0,100.0);
-	mH_pvz1 = new TH1D("h_pvz1","h_pvz1",200,-100.0,100.0);
+	m_H_pvz0 = new TH1D("h_pvz0","h_pvz0",200,-100.0,100.0);
+	m_H_pvz1 = new TH1D("h_pvz1","h_pvz1",200,-100.0,100.0);
 
 	m_SpinDbMaker = (StSpinDbMaker*)GetMaker("spinDbMaker");
 	assert(m_SpinDbMaker);
@@ -220,8 +220,6 @@ int StChargeTrackMaker::Make()
 		m_Trig[tID] = false;
 		m_TrigSoft[tID] = false;
 	}
-	m_Trig.shrink_to_fit();
-	m_TrigSoft.shrink_to_fit();
 
 	cout << "Tree variables initialization over !" << endl;
 	if (m_MuDstMaker!=NULL)

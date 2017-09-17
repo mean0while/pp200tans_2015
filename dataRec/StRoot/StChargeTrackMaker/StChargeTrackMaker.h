@@ -5,6 +5,8 @@
 
 #include "StMaker.h"
 #include "StMiniClass/StMiniTrack.h"
+#include <vector>
+#include <map>
 
 
 class TFile;
@@ -14,19 +16,17 @@ class StMuDstMaker;
 class StSpinDbMaker;
 class StTriggerSimuMaker;
 class StMiniTrack;
-class vector;
-class map;
+class TVector3;
 
 using namespace std;
 
-static double c_massPion     = 0.139570;
-static double c_massProton   = 0.938272;
-static double c_masskaon     = 0.493677;
-static double c_massElectron = 0.000511;
 
 class StChargeTrackMaker : public StMaker {
 private:
-	
+	static double c_massPion     = 0.139570;
+	static double c_massProton   = 0.938272;
+	static double c_masskaon     = 0.493677;
+	static double c_massElectron = 0.000511;	
 
 	StMuDst             *m_MuDst;
 	StMuDstMaker        *m_MuDstMaker;
@@ -34,7 +34,7 @@ private:
 	StTriggerSimuMaker  *m_TrigSimuMaker;
 
 	const char *m_OutFn;
-	std::vector<int> pool_trigID;
+	vector<int> pool_trigID;
 
 	TFile *m_OutFile;
 
