@@ -26,10 +26,14 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <algorithm>
+#include <cmath>
+#include <iterator>
 
 #include "StMiniClass/StMiniTrack.h"
 #include "StChargeTrackMaker.h"
 
+using namespace std;
 
 ClassImp(StChargeTrackMaker)
 
@@ -62,27 +66,88 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("pvy",&m_pvy,"pvy/D");
 	m_OutTree->Branch("pvz",&m_pvz,"pvz/D");
 	m_OutTree->Branch("npv",&m_npv,"npv/I");
-	m_OutTree->Branch("npvrank",m_npvrank,"npvrank[100]/I");
-	m_OutTree->Branch("npvz",m_npvz,"npvz[100]/I");
 	m_OutTree->Branch("nptr",&m_nptr,"nptr/I");
 	m_OutTree->Branch("ngtr",&m_ngtr,"ngtr/I");
-	m_OutTree->Branch("trig",m_trig,"trig[5]/I");
-	m_OutTree->Branch("IsVPD",&m_IsVPD,"IsVPD/I");
-	m_OutTree->Branch("IsJP1",&m_IsJP1,"IsJP1/I");
-	m_OutTree->Branch("IsJP2",&m_IsJP2,"IsJP2/I");
-	m_OutTree->Branch("IsL2J",&m_IsL2J,"IsL2J/I");
-	m_OutTree->Branch("vptr_p",&m_vptr_p);
-	m_OutTree->Branch("vptr_n",&m_vptr_n);
-	m_OutTree->Branch("vgtr_p",&m_vgtr_p);
-	m_OutTree->Branch("vgrt_n",&m_vgtr_n);
+
+	m_OutTree->Branch("npvrank",&m_nPVrank);
+	m_OutTree->Branch("npvz",&m_nPVz);
+	m_OutTree->Branch("trig",&m_Trig);
+	m_OutTree->Branch("trigSoft",&m_TrigSoft);
+	m_OutTree->Branch("ptr_p",&m_vptr_p);
+	m_OutTree->Branch("ptr_n",&m_vptr_n);
+	m_OutTree->Branch("gtr_p",&m_vgtr_p);
+	m_OutTree->Branch("grt_n",&m_vgtr_n);
+
+	m_OutTree->Branch("cosrp_L",&m_cosrp_L);
+	m_OutTree->Branch("openAngle_L",&m_openAngle_L);
+	m_OutTree->Branch("id_Lp",&m_id_Lp);
+	m_OutTree->Branch("id_Lpi",&m_id_Lpi);
+	m_OutTree->Branch("v3_L",&m_v3_L);
+	m_OutTree->Branch("im_L",&m_im_L);
+	m_OutTree->Branch("decayPoint_L",&m_v0_L);
+	m_OutTree->Branch("dca2_L",&m_dca2_L);
+
+	m_OutTree->Branch("cosrp_A",&m_cosrp_A);
+	m_OutTree->Branch("openAngle_A",&m_openAngle_A);
+	m_OutTree->Branch("id_Ap",&m_id_Ap);
+	m_OutTree->Branch("id_Api",&m_id_Api);
+	m_OutTree->Branch("v3_A",&m_v3_A);
+	m_OutTree->Branch("im_A",&m_im_A);
+	m_OutTree->Branch("decayPoint_A",&m_v0_A);
+	m_OutTree->Branch("dca2_A",&m_dca2_A);
+
+	m_OutTree->Branch("cosrp_K",&m_cosrp_K);
+	m_OutTree->Branch("openAngle_K",&m_openAngle_K);
+	m_OutTree->Branch("id_Kp",&m_id_Kp);
+	m_OutTree->Branch("id_Kpi",&m_id_Kpi);
+	m_OutTree->Branch("v3_K",&m_v3_K);
+	m_OutTree->Branch("im_K",&m_im_K);
+	m_OutTree->Branch("decayPoint_K",&m_v0_K);
+	m_OutTree->Branch("dca2_K",&m_dca2_K);
+}
+
+void Add_poolTrigID(int tID)
+{
+	pool_trigID.push_back(tID);
 }
 
 void StChargeTrackMaker::vClear(void)
 {
+	m_nPVrank.clear();
+	m_nPVz.clear();
+	m_Trig.clear();
+	m_TrigSoft.clear();
 	m_vptr_p.clear();
 	m_vptr_n.clear();
 	m_vgtr_p.clear();
 	m_vgtr_n.clear();
+
+	m_cosrp_L.clear();
+	m_openAngle_L.clear();
+	m_im_L.clear();
+	m_id_Lp.clear();
+	m_id_Lpi.clear();
+	m_v3_L.clear();
+	m_v0_L.clear();
+	m_dca2_L.clear();
+
+	m_cosrp_A.clear();
+	m_openAngle_A.clear();
+	m_im_A.clear();
+	m_id_Ap.clear();
+	m_id_Api.clear();
+	m_v3_A.clear();
+	m_v0_A.clear();
+	m_dca2_A.clear();
+
+	m_cosrp_K.clear();
+	m_openAngle_K.clear();
+	m_im_K.clear();
+	m_id_Kp.clear();
+	m_id_Kpi.clear();
+	m_v3_K.clear();
+	m_v0_K.clear();
+	m_dca2_K.clear();
 }
 
 bool StChargeTrackMaker::checkTrack( StMuTrack *mt )
@@ -144,20 +209,19 @@ int StChargeTrackMaker::Make()
 	m_pvy = -999.9;
 	m_pvz = -999.9;
 	m_npv = -1;
-	for (int i = 0; i < 100; ++i)
-	{
-		m_npvrank[i] = -1;
-		m_npvz[i] = -999.9;
-	}
 	m_nptr = 0;
 	m_ngtr = 0;
-	for (int i = 0; i < 5; ++i) m_trig[i] = 0;
-	m_IsVPD = 0;
-	m_IsJP1 = 0;
-	m_IsJP2 = 0;
-	m_IsL2J = 0;
+	pool_trigID.shrink_to_fit();
+	for (int i = 0; i < pool_trigID.size(); ++i)
+	{
+		int tID = pool_trigID[i];
+		m_Trig[tID] = false;
+		m_TrigSoft[tID] = false;
+	}
+	m_Trig.shrink_to_fit();
+	m_TrigSoft.shrink_to_fit();
 
-	cout << "" << endl;
+	cout << "Tree variables initialization over !" << endl;
 	if (m_MuDstMaker!=NULL)
 	{
 		m_MuDst = m_MuDstMaker->muDst();
@@ -198,47 +262,52 @@ int StChargeTrackMaker::Make()
 	m_bbcTimebin = bbc.onlineTimeDifference() >> 9 & 0xf;
 
 	StTriggerId nominal = muEvent->triggerIdCollection().nominal();
+	int sum_Trig = 0;
+	for (int i = 0; i < pool_trigID.size(); ++i)
+	{
+		int tID = pool_trigID[i];
+		if (nominal.isTrigger(tID)) m_Trig[tID] = true;
+		if (m_TrigSimuMaker.isTrigger(tID)) m_TrigSoft[tID] = true;
+		sum_Trig = m_Trig[tID] + sum_Trig;
+	}
 
-	if (nominal.isTrigger(480202)) m_trig[0]=1; // BHT1*VPDMB-30
-	if (nominal.isTrigger(480206)) m_trig[1]=1; // BHT1*VPDMB-30-nobsmd
-	if (nominal.isTrigger(480404)||nominal.isTrigger(480414)) m_trig[2]=1; // JP1
-	if (nominal.isTrigger(480401)||nominal.isTrigger(480411)) m_trig[3]=1; // JP2
-	if (nominal.isTrigger(480405)||nominal.isTrigger(480415)) m_trig[4]=1; // JP2*L2JetHigh
-
-	if ( !(m_trig[0]+m_trig[1]+m_trig[2]+m_trig[3]+m_trig[4]) ) return kStSkip;
+	if (!sum_Trig) return kStSkip;
 
 	m_npv = m_MuDst->numberOfPrimaryVertices();
+	if (m_npv<1) return kStSkip;
 	for (int i = 0; i < m_npv; ++i)
 	{
 		StMuPrimaryVertex *mupv = m_MuDst->primaryVertex(i);
 		StThreeVectorF posV = mupv->position();
-		m_npvrank[i] = mupv->ranking();
-		m_npvz[i] = posV.z();
+		m_nPVrank.push_back(mupv->ranking());
+		m_nPVz.push_back(posV.z());
 	}
-	if (m_npvrank[0]<0) return kStSkip;
+	m_nPVrank.shrink_to_fit();
+	m_nPVz.shrink_to_fit();
+	if (m_nPVrank[0]<0) return kStSkip;
 
 	m_nptr = m_MuDst->numberOfPrimaryTracks();
 	m_ngtr = m_MuDst->numberOfGlobalTracks();
 	if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
 	mH_pvz0->Fill(m_pvz);
 	if (fabs(m_pvz)>60.0) return kStSkip;
-	LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
+	//LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
 	mH_pvz1->Fill(m_pvz);
 
-	StMiniTrack testMt;
-	LOG_INFO << testMt.get_charge() << endm;
+	//StMiniTrack testMt;
+	//LOG_INFO << testMt.get_charge() << endm;
 
 	for (int i = 0; i < m_nptr; ++i)
 	{
 		StMuTrack *mt = m_MuDst->primaryTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<1.0) continue;
-		LOG_INFO << mt->pt() << endm;
+		if (mt->pt()<0.5) continue;
+		//LOG_INFO << mt->pt() << endm;
 
 		StMiniTrack miniMt(mt);
 		
 		if (miniMt.beyond_nSigma())	continue;
-		if (miniMt.dcaXY()>1.5) continue;
+		//if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vptr_n.push_back(miniMt);
 	}
@@ -249,15 +318,127 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<1.0) continue;
+		if (mt->pt()<0.1) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
-		if (miniMt.dcaXY()>1.5) continue;
+		//if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vgtr_n.push_back(miniMt);
 	}
 	m_vgtr_p.shrink_to_fit();
 	m_vgtr_n.shrink_to_fit();
+
+	for (vector<StMiniTrack>::iterator ip = m_vgtr_p.begin(); ip != m_vgtr_p.end(); ++ip)
+	{
+		auto tp = *ip;
+		if (fabs(tp.get_nSigmaPion())>3.0 && fabs(tp.get_nSigmaProton())>3.0) continue;
+
+		for (std::vector<StMiniTrack>::iterator in = m_vgtr_n.begin(); in != m_vgtr_n.end(); ++in)
+		{
+			auto tn = *in;
+			if (fabs(tn.get_nSigmaPion())>3.0 && fabs(tn.get_nSigmaProton())>3.0) continue;
+
+			StPhysicalHelixD helix_tp = tp.get_helix();
+			StPhysicalHelixD helix_tn = tn.get_helix();
+			pair< double, double > 	ss = helix_tp.pathLengths(helix_tn);
+			double s_tp = ss.first;
+			double s_tn = ss.second;
+			StThreeVectorD v3_tp = helix_tp.at(s_tp);
+			StThreeVectorD v3_tn = helix_tn.at(s_tn);
+			double dca2_v0 = (v3_tp - v3_tn).mag();
+			if (dca2_v0>2.0) continue;
+
+			StThreeVectorD v3_v0position = (v3_tp + v3_tn) / 2.0;
+			StLorentzVector v4_tp(v3_tp);
+			StLorentzVector v4_tn(v3_tn);
+			StThreeVectorD v3_decay = v3_v0position - pv_position;
+			double openAngle = v3_tp.angle(v3_tn);
+			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
+
+			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
+			{
+				v4_tp.setE(v3_tp*v3_tp + c_massProton*c_massProton);
+				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
+				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				double mass_v0 = v4_v0.m();
+				if (mass_v0>1.06 && mass_v0<=1.18)
+				{	
+					m_cosrp_L.push_back(cosrp);
+					m_openAngle_L.push_back(openAngle);
+					m_id_Lp.push_back(tp.get_id());
+					m_id_Lpi.push_back(tn.get_id());
+					m_v3_L.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_im_L.push_back(mass_v0);
+					m_v0_L.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
+					m_dca2_L.push_back(dca2_v0);
+				}
+			}
+			if ( fabs(tn.get_nSigmaProton())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
+			{
+				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
+				v4_tn.setE(v3_tn*v3_tn + c_massProton*c_massProton);
+				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				double mass_v0 = v4_v0.m();
+
+				if (mass_v0>1.06 && mass_v0<=1.18)
+				{
+					m_cosrp_A.push_back(cosrp);
+					m_openAngle_A.push_back(openAngle);
+					m_id_Ap.push_back(tn.get_id());
+					m_id_Api.push_back(tp.get_id());
+					m_v3_A.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_im_A.push_back(mass_v0);
+					m_v0_A.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
+					m_dca2_A.push_back(dca2_v0);
+				}
+			}
+			if ( fabs(tn.get_nSigmaPion())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
+			{
+				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
+				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
+				StLorentzVector v4_v0 = v4_tp + v4_tn;
+				double mass_v0 = v4_v0.m();
+
+				if (mass_v0>0.42 && mass_v0<=0.58)
+				{
+					m_cosrp_K.push_back(cosrp);
+					m_openAngle_K.push_back(openAngle);
+					m_id_Kp.push_back(tp.get_id());
+					m_id_Kpi.push_back(tn.get_id());
+					m_v3_K.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_im_K.push_back(mass_v0);
+					m_v0_K.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
+					m_dca2_K.push_back(dca2_v0);
+				}
+			}
+		}
+	}
+	m_cosrp_L.shrink_to_fit();
+	m_openAngle_L.shrink_to_fit();
+	m_id_Lp.shrink_to_fit();
+	m_id_Lpi.shrink_to_fit();
+	m_v3_L.shrink_to_fit();
+	m_im_L.shrink_to_fit();
+	m_v0_L.shrink_to_fit();
+	m_dca2_L.shrink_to_fit();
+
+	m_cosrp_A.shrink_to_fit();
+	m_openAngle_A.shrink_to_fit();
+	m_id_Ap.shrink_to_fit();
+	m_id_Api.shrink_to_fit();
+	m_v3_A.shrink_to_fit();
+	m_im_A.shrink_to_fit()
+	m_v0_A.shrink_to_fit();
+	m_dca2_A.shrink_to_fit();
+
+	m_cosrp_K.shrink_to_fit();
+	m_openAngle_K.shrink_to_fit();
+	m_id_Kp.shrink_to_fit();
+	m_id_Kpi.shrink_to_fit();
+	m_v3_K.shrink_to_fit();
+	m_im_K.shrink_to_fit();
+	m_v0_K.shrink_to_fit();
+	m_dca2_K.shrink_to_fit();
 
 	m_OutTree->Fill();
 

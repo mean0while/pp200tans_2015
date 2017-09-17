@@ -81,7 +81,15 @@ void run_Track( int nEvts=10, const char* fin_name="in.root", const char *fout_n
     trigSimu->bemc->setConfig(StBemcTriggerSimu::kOnline);
 
     StChargeTrackMaker *chargeTrackMaker = new StChargeTrackMaker("chargeTrack", muDstMaker, fout_name);
-    
+    chargeTrackMaker->Add_poolTrigID(480202);
+    chargeTrackMaker->Add_poolTrigID(480206);
+    chargeTrackMaker->Add_poolTrigID(480404);
+    chargeTrackMaker->Add_poolTrigID(480414);
+    chargeTrackMaker->Add_poolTrigID(480401);
+    chargeTrackMaker->Add_poolTrigID(480411);
+    chargeTrackMaker->Add_poolTrigID(480405);
+    chargeTrackMaker->Add_poolTrigID(480415);
+
     chain->SetDebug(0);
     chain->Init();
     chain->EventLoop(1,nEvts);

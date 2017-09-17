@@ -76,6 +76,45 @@ StMiniTrack::StMiniTrack( StMuTrack *mt ): TObject()
   m_towerBEMC = mt->getTower(0,1);
 }
 
+StMiniTrack::StMiniTrack( StMiniTrack &mt )
+{
+  m_id = mt->get_id();
+  m_flag = mt->get_flag();
+  m_type = mt->get_type();
+  m_charge = mt->get_charge();
+  m_nHitsFit = mt->get_nHitsFit();
+  m_nHitsPos = mt->get_nHitsPoss();
+
+  m_dEdx = mt->get_dEdx();
+  m_nSigmaElectron = mt->get_nSigmaElectron();
+  m_nSigmaKaon = mt->get_nSigmaKaon();
+  m_nSigmaPion = mt->get_nSigmaPion();
+  m_nSigmaProton = mt->get_nSigmaProton();
+  m_pidElectron = mt->get_pidElectron();
+  m_pidKaon = mt->get_pidKaon();
+  m_pidPion = mt->get_pidPion();
+  m_pidProton = mt->get_pidProton();
+
+  m_helix = mt->get_helix();
+  m_dca = mt->get_dca();
+  m_p_pv = mt->get_p_pv();
+  m_p_first = mt->get_p_first();
+  m_p_last = mt->get_p_last();
+
+  m_yPid[0] = mt.get_yPidElectron();
+  m_yPid[1] = mt.get_yPidProton();
+  m_yPid[2] = mt.get_yPidKaon();
+  m_yPid[3] = mt.get_yPidPion();
+
+  StMuBTofPidTraits btofPid = mt->btofPidTraits();
+  m_matchTOF = btofPid.matchFlag();
+  m_betaTOF = btofPid.beta();
+
+  m_matchBEMC = mt->matchBEMC();
+  m_energyBEMC = mt->energyBEMC();
+  m_towerBEMC = mt->getTower(0,1);
+}
+
 bool StMiniTrack::isGood()
 {
   if (m_id<=0 || m_flag<=0 || m_flag>=1000 || m_nHitsFit<15)
@@ -85,16 +124,9 @@ bool StMiniTrack::isGood()
   return true;
 }
 
-bool StMiniTrack::beyond_nSigma()
-{
-  if (fabs(m_nSigmaKaon)>3.0 && fabs(m_nSigmaPion)>3.0 && fabs(m_nSigmaProton)>3.0)
-    return true;
-  return false;
-}
-
 double StMiniTrack::m2TOF()
 {
-  double tm2 = -9.9;
+  double tm2 = -999.9;
   if (m_matchTOF<1 || m_betaTOF<0.0 || m_betaTOF>1.0)
     return tm2;
   // M^2 = p^2[(1/beta)^2 - 1]
