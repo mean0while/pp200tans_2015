@@ -214,11 +214,11 @@ int StChargeTrackMaker::Make()
 	m_npv = -1;
 	m_nptr = 0;
 	m_ngtr = 0;
-	
+
 	pool_trigID.shrink_to_fit();
-	for (int i = 0; i < pool_trigID.size(); ++i)
+	for (vector<int>::iterator i = pool_trigID.begin(); i != pool_trigID.end(); ++i)
 	{
-		int tID = pool_trigID[i];
+		int tID = *i;
 		m_Trig[tID] = false;
 		m_TrigSoft[tID] = false;
 	}
@@ -269,7 +269,7 @@ int StChargeTrackMaker::Make()
 	{
 		int tID = pool_trigID[i];
 		if (nominal.isTrigger(tID)) m_Trig[tID] = true;
-		if (m_TrigSimuMaker.isTrigger(tID)) m_TrigSoft[tID] = true;
+		if (m_TrigSimuMaker->isTrigger(tID)) m_TrigSoft[tID] = true;
 		sum_Trig = m_Trig[tID] + sum_Trig;
 	}
 
@@ -291,10 +291,10 @@ int StChargeTrackMaker::Make()
 	m_nptr = m_MuDst->numberOfPrimaryTracks();
 	m_ngtr = m_MuDst->numberOfGlobalTracks();
 	if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
-	mH_pvz0->Fill(m_pvz);
+	m_H_pvz0->Fill(m_pvz);
 	if (fabs(m_pvz)>60.0) return kStSkip;
 	//LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
-	mH_pvz1->Fill(m_pvz);
+	m_H_pvz1->Fill(m_pvz);
 
 	//StMiniTrack testMt;
 	//LOG_INFO << testMt.get_charge() << endm;
