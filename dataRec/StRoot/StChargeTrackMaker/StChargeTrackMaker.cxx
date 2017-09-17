@@ -214,6 +214,7 @@ int StChargeTrackMaker::Make()
 	m_npv = -1;
 	m_nptr = 0;
 	m_ngtr = 0;
+	
 	pool_trigID.shrink_to_fit();
 	for (int i = 0; i < pool_trigID.size(); ++i)
 	{

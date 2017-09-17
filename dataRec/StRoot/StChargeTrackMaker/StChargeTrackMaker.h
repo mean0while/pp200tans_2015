@@ -7,6 +7,7 @@
 #include "StMiniClass/StMiniTrack.h"
 #include <vector>
 #include <map>
+#include "TVector3.h"
 
 
 class TFile;
@@ -20,13 +21,14 @@ class TVector3;
 
 using namespace std;
 
+static double c_massPion     = 0.139570;
+static double c_massProton   = 0.938272;
+static double c_masskaon     = 0.493677;
+static double c_massElectron = 0.000511;
+
 
 class StChargeTrackMaker : public StMaker {
-private:
-	static double c_massPion     = 0.139570;
-	static double c_massProton   = 0.938272;
-	static double c_masskaon     = 0.493677;
-	static double c_massElectron = 0.000511;	
+private:		
 
 	StMuDst             *m_MuDst;
 	StMuDstMaker        *m_MuDstMaker;
