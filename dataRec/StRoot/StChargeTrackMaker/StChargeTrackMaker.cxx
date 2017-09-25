@@ -93,6 +93,7 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("im_L",&m_im_L);
 	m_OutTree->Branch("decayPoint_L",&m_v0_L);
 	m_OutTree->Branch("dca2_L",&m_dca2_L);
+	m_OutTree->Branch("dcaV0_L",&m_dcaV0_L);
 
 	m_OutTree->Branch("cosrp_A",&m_cosrp_A);
 	m_OutTree->Branch("openAngle_A",&m_openAngle_A);
@@ -102,6 +103,7 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("im_A",&m_im_A);
 	m_OutTree->Branch("decayPoint_A",&m_v0_A);
 	m_OutTree->Branch("dca2_A",&m_dca2_A);
+	m_OutTree->Branch("dcaV0_A",&m_dcaV0_A);
 
 	m_OutTree->Branch("cosrp_K",&m_cosrp_K);
 	m_OutTree->Branch("openAngle_K",&m_openAngle_K);
@@ -111,6 +113,7 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("im_K",&m_im_K);
 	m_OutTree->Branch("decayPoint_K",&m_v0_K);
 	m_OutTree->Branch("dca2_K",&m_dca2_K);
+	m_OutTree->Branch("dcaV0_K",&m_dcaV0_K);
 }
 
 void StChargeTrackMaker::Add_poolTrigID(int tID)
@@ -137,6 +140,7 @@ void StChargeTrackMaker::vClear(void)
 	m_v3_L.clear();
 	m_v0_L.clear();
 	m_dca2_L.clear();
+	m_dcaV0_L.clear();
 
 	m_cosrp_A.clear();
 	m_openAngle_A.clear();
@@ -146,6 +150,7 @@ void StChargeTrackMaker::vClear(void)
 	m_v3_A.clear();
 	m_v0_A.clear();
 	m_dca2_A.clear();
+	m_dcaV0_A.clear();
 
 	m_cosrp_K.clear();
 	m_openAngle_K.clear();
@@ -155,6 +160,7 @@ void StChargeTrackMaker::vClear(void)
 	m_v3_K.clear();
 	m_v0_K.clear();
 	m_dca2_K.clear();
+	m_dcaV0_K.clear();
 }
 
 bool StChargeTrackMaker::checkTrack( StMuTrack *mt )
@@ -362,6 +368,7 @@ int StChargeTrackMaker::Make()
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
 			double sinrp = sin(v3_decay.angle(v3_tp+v3_tn));
+			double dcaV0 = (sinrp*v3_decay).mag2();
 
 			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
 			{
@@ -379,6 +386,7 @@ int StChargeTrackMaker::Make()
 					m_im_L.push_back(mass_v0);
 					m_v0_L.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_L.push_back(dca2_v0);
+					m_dcaV0_L.push_back(dcaV0);
 				}
 			}
 			if ( fabs(tn.get_nSigmaProton())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
@@ -398,6 +406,7 @@ int StChargeTrackMaker::Make()
 					m_im_A.push_back(mass_v0);
 					m_v0_A.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_A.push_back(dca2_v0);
+					m_dcaV0_A.push_back(dcaV0);
 				}
 			}
 			if ( fabs(tn.get_nSigmaPion())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
@@ -411,6 +420,7 @@ int StChargeTrackMaker::Make()
 				if (tp.get_dca()<0.1) continue;
 				if (tn.get_dca()<0.1) continue;
 				if (v3_decay.mag()<1.0) continue;
+				if (dcaV0>0.8) continue;
 
 				if (mass_v0>0.42 && mass_v0<=0.58)
 				{
@@ -422,6 +432,7 @@ int StChargeTrackMaker::Make()
 					m_im_K.push_back(mass_v0);
 					m_v0_K.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_K.push_back(dca2_v0);
+					m_dcaV0_K.push_back(dcaV0);
 				}
 			}
 		}

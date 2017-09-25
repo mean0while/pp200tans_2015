@@ -79,6 +79,7 @@ private:
 	vector<TVector3> m_v3_L;
 	vector<TVector3> m_v0_L;
 	vector<double>   m_dca2_L;
+	vector<double>   m_dcaV0_L;
 
 	vector<double>   m_cosrp_A;
 	vector<double>   m_openAngle_A;
@@ -88,6 +89,7 @@ private:
 	vector<TVector3> m_v3_A;
 	vector<TVector3> m_v0_A;
 	vector<double>   m_dca2_A;
+	vector<double>   m_dcaV0_A;
 
 	vector<double>   m_cosrp_K;
 	vector<double>   m_openAngle_K;
@@ -97,6 +99,7 @@ private:
 	vector<TVector3> m_v3_K;
 	vector<TVector3> m_v0_K;
 	vector<double>   m_dca2_K;
+	vector<double>   m_dcaV0_K;
 
 	TH1D *m_H_pvz0;
 	TH1D *m_H_pvz1;
