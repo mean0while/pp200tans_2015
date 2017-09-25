@@ -294,7 +294,7 @@ int StChargeTrackMaker::Make()
 
 	m_nptr = m_MuDst->numberOfPrimaryTracks();
 	m_ngtr = m_MuDst->numberOfGlobalTracks();
-	if ( m_nptr<1 || m_nptr<1 ) return kStSkip;
+	if ( m_nptr<1 || m_ngtr<1 ) return kStSkip;
 	m_H_pvz0->Fill(m_pvz);
 	if (fabs(m_pvz)>60.0) return kStSkip;
 	//LOG_INFO << m_evtID << " ~ " << m_pvz << endm;
@@ -313,7 +313,7 @@ int StChargeTrackMaker::Make()
 		StMiniTrack miniMt(mt);
 		
 		if (miniMt.beyond_nSigma())	continue;
-		//if (miniMt.dcaXY()>1.5) continue;
+		if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vptr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vptr_n.push_back(miniMt);
 	}
@@ -324,10 +324,9 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<0.1) continue;
+		if (mt->pt()<0.0001) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
-		//if (miniMt.dcaXY()>1.5) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
 		if (mt->charge()<0) m_vgtr_n.push_back(miniMt);
 	}
@@ -352,7 +351,7 @@ int StChargeTrackMaker::Make()
 			StThreeVectorD v3_tp = helix_tp.at(s_tp);
 			StThreeVectorD v3_tn = helix_tn.at(s_tn);
 			double dca2_v0 = (v3_tp - v3_tn).mag();
-			if (dca2_v0>2.0) continue;
+			if (dca2_v0>1.20) continue;
 
 			StThreeVectorD v3_v0position = (v3_tp + v3_tn) / 2.0;
 			StLorentzVectorD v4_tp;
@@ -406,6 +405,11 @@ int StChargeTrackMaker::Make()
 				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
 				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
 				double mass_v0 = v4_v0.m();
+				if (cosrp<0.98) continue;
+				if (dca2_v0>1.0) continue;
+				if (tp.get_dca()<0.1) continue;
+				if (tn.get_dca()<0.1) continue;
+				if (v3_decay.mag()<1.0) continue;
 
 				if (mass_v0>0.42 && mass_v0<=0.58)
 				{
@@ -435,7 +439,7 @@ int StChargeTrackMaker::Make()
 	m_id_Ap.shrink_to_fit();
 	m_id_Api.shrink_to_fit();
 	m_v3_A.shrink_to_fit();
-	m_im_A.shrink_to_fit()
+	m_im_A.shrink_to_fit();
 	m_v0_A.shrink_to_fit();
 	m_dca2_A.shrink_to_fit();
 
