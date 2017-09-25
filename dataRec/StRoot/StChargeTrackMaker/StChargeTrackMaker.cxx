@@ -348,12 +348,12 @@ int StChargeTrackMaker::Make()
 			pair< double, double > 	ss = helix_tp.pathLengths(helix_tn);
 			double s_tp = ss.first;
 			double s_tn = ss.second;
-			StThreeVectorD v3_tp = helix_tp.at(s_tp);
-			StThreeVectorD v3_tn = helix_tn.at(s_tn);
-			double dca2_v0 = (v3_tp - v3_tn).mag();
+			double dca2_v0 = (helix_tp.at(s_tp)-helix_tn.at(s_tn)).mag();
 			if (dca2_v0>1.20) continue;
-
-			StThreeVectorD v3_v0position = (v3_tp + v3_tn) / 2.0;
+			
+			StThreeVectorD v3_v0position = ( helix_tp.at(s_tp)+helix_tn.at(s_tn) ) / 2.0;
+			StThreeVectorD v3_tp = helix_tp.momentumAt(s_tp);
+			StThreeVectorD v3_tn = helix_tn.momentumAt(s_tn);
 			StLorentzVectorD v4_tp;
 			v4_tp.setVect(v3_tp);
 			StLorentzVectorD v4_tn;
@@ -361,6 +361,7 @@ int StChargeTrackMaker::Make()
 			StThreeVectorD v3_decay = v3_v0position - pv_position;
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
+			double sinrp = sin(v3_decay.angle(v3_tp+v3_tn));
 
 			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
 			{
