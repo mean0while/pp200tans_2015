@@ -368,7 +368,7 @@ int StChargeTrackMaker::Make()
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
 			double sinrp = sin(v3_decay.angle(v3_tp+v3_tn));
-			double dcaV0 = (sinrp*v3_decay).mag2();
+			double dcaV0 = sqrt((sinrp*v3_decay).mag2());
 
 			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
 			{
@@ -417,8 +417,8 @@ int StChargeTrackMaker::Make()
 				double mass_v0 = v4_v0.m();
 				if (cosrp<0.98) continue;
 				if (dca2_v0>1.0) continue;
-				if (tp.get_dca()<0.1) continue;
-				if (tn.get_dca()<0.1) continue;
+				if (tp.get_dca().mag()<0.1) continue;
+				if (tn.get_dca().mag()<0.1) continue;
 				if (v3_decay.mag()<1.0) continue;
 				if (dcaV0>0.8) continue;
 
