@@ -21,12 +21,6 @@ class TVector3;
 
 using namespace std;
 
-static double c_massPion     = 0.139570;
-static double c_massProton   = 0.938272;
-static double c_massKaon     = 0.493677;
-static double c_massElectron = 0.000511;
-
-
 class StChargeTrackMaker : public StMaker {
 private:		
 
