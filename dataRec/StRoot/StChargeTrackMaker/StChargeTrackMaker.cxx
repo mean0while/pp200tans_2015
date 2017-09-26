@@ -330,7 +330,7 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<0.0001) continue;
+		if (mt->pt()<0.1) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
@@ -358,8 +358,8 @@ int StChargeTrackMaker::Make()
 			if (dca2_v0>1.20) continue;
 			
 			StThreeVectorD v3_v0position = ( helix_tp.at(s_tp)+helix_tn.at(s_tn) ) / 2.0;
-			StThreeVectorD v3_tp = helix_tp.momentumAt(s_tp);
-			StThreeVectorD v3_tn = helix_tn.momentumAt(s_tn);
+			StThreeVectorD v3_tp = helix_tp.momentumAt(s_tp,magn*kilogauss);
+			StThreeVectorD v3_tn = helix_tn.momentumAt(s_tn,magn*kilogauss);
 			StLorentzVectorD v4_tp;
 			v4_tp.setVect(v3_tp);
 			StLorentzVectorD v4_tn;
