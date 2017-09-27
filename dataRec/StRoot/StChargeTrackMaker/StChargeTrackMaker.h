@@ -74,6 +74,9 @@ private:
 	vector<TVector3> m_v0_L;
 	vector<double>   m_dca2_L;
 	vector<double>   m_dcaV0_L;
+	vector<double>   m_dca_Lp;
+	vector<double>   m_dca_Lpi;
+	vector<double>   m_decay_L;
 
 	vector<double>   m_cosrp_A;
 	vector<double>   m_openAngle_A;
@@ -84,6 +87,9 @@ private:
 	vector<TVector3> m_v0_A;
 	vector<double>   m_dca2_A;
 	vector<double>   m_dcaV0_A;
+	vector<double>   m_dca_Ap;
+	vector<double>   m_dca_Api;
+	vector<double>   m_decay_A;
 
 	vector<double>   m_cosrp_K;
 	vector<double>   m_openAngle_K;
@@ -94,6 +100,9 @@ private:
 	vector<TVector3> m_v0_K;
 	vector<double>   m_dca2_K;
 	vector<double>   m_dcaV0_K;
+	vector<double>   m_dca_Kp;
+	vector<double>   m_dca_Kpi;
+	vector<double>   m_decay_K;
 
 	TH1D *m_H_pvz0;
 	TH1D *m_H_pvz1;

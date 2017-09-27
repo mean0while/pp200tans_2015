@@ -99,6 +99,9 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("decayPoint_L",&m_v0_L);
 	m_OutTree->Branch("dca2_L",&m_dca2_L);
 	m_OutTree->Branch("dcaV0_L",&m_dcaV0_L);
+	m_OutTree->Branch("dca_Lp",&m_dca_Lp);
+	m_OutTree->Branch("dca_Lpi",&m_dca_Lpi);
+	m_OutTree->Branch("decay_L",&m_decay_L);
 
 	m_OutTree->Branch("cosrp_A",&m_cosrp_A);
 	m_OutTree->Branch("openAngle_A",&m_openAngle_A);
@@ -109,6 +112,9 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("decayPoint_A",&m_v0_A);
 	m_OutTree->Branch("dca2_A",&m_dca2_A);
 	m_OutTree->Branch("dcaV0_A",&m_dcaV0_A);
+	m_OutTree->Branch("dca_Ap",&m_dca_Ap);
+	m_OutTree->Branch("dca_Api",&m_dca_Api);
+	m_OutTree->Branch("decay_A",&m_decay_A);
 
 	m_OutTree->Branch("cosrp_K",&m_cosrp_K);
 	m_OutTree->Branch("openAngle_K",&m_openAngle_K);
@@ -119,6 +125,9 @@ void StChargeTrackMaker::InitTree()
 	m_OutTree->Branch("decayPoint_K",&m_v0_K);
 	m_OutTree->Branch("dca2_K",&m_dca2_K);
 	m_OutTree->Branch("dcaV0_K",&m_dcaV0_K);
+	m_OutTree->Branch("dca_Kp",&m_dca_Kp);
+	m_OutTree->Branch("dca_Kpi",&m_dca_Kpi);
+	m_OutTree->Branch("decay_K",&m_decay_K);
 }
 
 void StChargeTrackMaker::Add_poolTrigID(int tID)
@@ -146,6 +155,9 @@ void StChargeTrackMaker::vClear(void)
 	m_v0_L.clear();
 	m_dca2_L.clear();
 	m_dcaV0_L.clear();
+	m_dca_Lp.clear();
+	m_dca_Lpi.clear();
+	m_decay_L.clear();
 
 	m_cosrp_A.clear();
 	m_openAngle_A.clear();
@@ -156,6 +168,9 @@ void StChargeTrackMaker::vClear(void)
 	m_v0_A.clear();
 	m_dca2_A.clear();
 	m_dcaV0_A.clear();
+	m_dca_Ap.clear();
+	m_dca_Api.clear();
+	m_decay_A.clear();
 
 	m_cosrp_K.clear();
 	m_openAngle_K.clear();
@@ -166,6 +181,9 @@ void StChargeTrackMaker::vClear(void)
 	m_v0_K.clear();
 	m_dca2_K.clear();
 	m_dcaV0_K.clear();
+	m_dca_Kp.clear();
+	m_dca_Kpi.clear();
+	m_decay_K.clear();
 }
 
 bool StChargeTrackMaker::checkTrack( StMuTrack *mt )
@@ -335,7 +353,7 @@ int StChargeTrackMaker::Make()
 	{
 		StMuTrack *mt = m_MuDst->globalTracks(i);
 		if (checkTrack(mt)) continue;
-		if (mt->pt()<0.1) continue;
+		if (mt->pt()<0.01) continue;
 		StMiniTrack miniMt(mt);
 		if (miniMt.beyond_nSigma()) continue;
 		if (mt->charge()>0) m_vgtr_p.push_back(miniMt);
@@ -346,12 +364,12 @@ int StChargeTrackMaker::Make()
 
 	for (vector<StMiniTrack>::iterator ip = m_vgtr_p.begin(); ip != m_vgtr_p.end(); ++ip)
 	{
-		auto tp = *ip;
+		StMiniTrack tp = *ip;
 		if (fabs(tp.get_nSigmaPion())>3.0 && fabs(tp.get_nSigmaProton())>3.0) continue;
 
 		for (std::vector<StMiniTrack>::iterator in = m_vgtr_n.begin(); in != m_vgtr_n.end(); ++in)
 		{
-			auto tn = *in;
+			StMiniTrack tn = *in;
 			if (fabs(tn.get_nSigmaPion())>3.0 && fabs(tn.get_nSigmaProton())>3.0) continue;
 
 			StPhysicalHelixD helix_tp = tp.get_helix();
@@ -387,11 +405,14 @@ int StChargeTrackMaker::Make()
 					m_openAngle_L.push_back(openAngle);
 					m_id_Lp.push_back(tp.get_id());
 					m_id_Lpi.push_back(tn.get_id());
+					m_dca_Lp.push_back(tp.get_dca().mag());
+					m_dca_Lpi.push_back(tn.get_dca().mag());
 					m_v3_L.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
 					m_im_L.push_back(mass_v0);
 					m_v0_L.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_L.push_back(dca2_v0);
 					m_dcaV0_L.push_back(dcaV0);
+					m_decay_L.push_back(v3_decay.mag());
 				}
 			}
 			if ( fabs(tn.get_nSigmaProton())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
@@ -407,11 +428,14 @@ int StChargeTrackMaker::Make()
 					m_openAngle_A.push_back(openAngle);
 					m_id_Ap.push_back(tn.get_id());
 					m_id_Api.push_back(tp.get_id());
+					m_dca_Ap.push_back(tn.get_dca().mag());
+					m_dca_Api.push_back(tp.get_dca().mag());
 					m_v3_A.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
 					m_im_A.push_back(mass_v0);
 					m_v0_A.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_A.push_back(dca2_v0);
 					m_dcaV0_A.push_back(dcaV0);
+					m_decay_A.push_back(v3_decay.mag());
 				}
 			}
 			if ( fabs(tn.get_nSigmaPion())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
@@ -422,10 +446,10 @@ int StChargeTrackMaker::Make()
 				double mass_v0 = v4_v0.m();
 				if (cosrp<0.98) continue;
 				if (dca2_v0>1.0) continue;
-				if (tp.get_dca().mag()<0.1) continue;
-				if (tn.get_dca().mag()<0.1) continue;
+				if (tp.get_dca().mag()<0.2) continue;
+				if (tn.get_dca().mag()<0.2) continue;
 				if (v3_decay.mag()<1.0) continue;
-				if (dcaV0>0.8) continue;
+				if (dcaV0>1.0) continue;
 
 				if (mass_v0>0.42 && mass_v0<=0.58)
 				{
@@ -433,11 +457,14 @@ int StChargeTrackMaker::Make()
 					m_openAngle_K.push_back(openAngle);
 					m_id_Kp.push_back(tp.get_id());
 					m_id_Kpi.push_back(tn.get_id());
+					m_dca_Kp.push_back(tp.get_dca().mag());
+					m_dca_Kpi.push_back(tn.get_dca().mag());
 					m_v3_K.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
 					m_im_K.push_back(mass_v0);
 					m_v0_K.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_K.push_back(dca2_v0);
 					m_dcaV0_K.push_back(dcaV0);
+					m_decay_K.push_back(v3_decay.mag());
 				}
 			}
 		}
@@ -450,6 +477,10 @@ int StChargeTrackMaker::Make()
 	m_im_L.shrink_to_fit();
 	m_v0_L.shrink_to_fit();
 	m_dca2_L.shrink_to_fit();
+	m_dcaV0_L.shrink_to_fit();
+	m_dca_Lp.shrink_to_fit();
+	m_dca_Lpi.shrink_to_fit();
+	m_decay_L.shrink_to_fit();
 
 	m_cosrp_A.shrink_to_fit();
 	m_openAngle_A.shrink_to_fit();
@@ -459,6 +490,10 @@ int StChargeTrackMaker::Make()
 	m_im_A.shrink_to_fit();
 	m_v0_A.shrink_to_fit();
 	m_dca2_A.shrink_to_fit();
+	m_dcaV0_A.shrink_to_fit();
+	m_dca_Ap.shrink_to_fit();
+	m_dca_Api.shrink_to_fit();
+	m_decay_A.shrink_to_fit();
 
 	m_cosrp_K.shrink_to_fit();
 	m_openAngle_K.shrink_to_fit();
@@ -468,6 +503,10 @@ int StChargeTrackMaker::Make()
 	m_im_K.shrink_to_fit();
 	m_v0_K.shrink_to_fit();
 	m_dca2_K.shrink_to_fit();
+	m_dcaV0_K.shrink_to_fit();
+	m_dca_Kp.shrink_to_fit();
+	m_dca_Kpi.shrink_to_fit();
+	m_decay_K.shrink_to_fit();
 
 	m_OutTree->Fill();
 
