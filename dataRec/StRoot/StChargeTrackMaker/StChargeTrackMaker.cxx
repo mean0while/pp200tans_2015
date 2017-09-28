@@ -372,6 +372,8 @@ int StChargeTrackMaker::Make()
 			StMiniTrack tn = *in;
 			if (fabs(tn.get_nSigmaPion())>3.0 && fabs(tn.get_nSigmaProton())>3.0) continue;
 
+			if (fabs(tp.get_nSigmaPion())>3.0 && fabs(tn.get_nSigmaPion())>3.0) continue;
+
 			StPhysicalHelixD helix_tp = tp.get_helix();
 			StPhysicalHelixD helix_tn = tn.get_helix();
 			pair< double, double > 	ss = helix_tp.pathLengths(helix_tn);
@@ -383,22 +385,23 @@ int StChargeTrackMaker::Make()
 			StThreeVectorD v3_v0position = ( helix_tp.at(s_tp)+helix_tn.at(s_tn) ) / 2.0;
 			StThreeVectorD v3_tp = helix_tp.momentumAt(s_tp,m_magn*kilogauss);
 			StThreeVectorD v3_tn = helix_tn.momentumAt(s_tn,m_magn*kilogauss);
-			StLorentzVectorD v4_tp;
-			v4_tp.setVect(v3_tp);
-			StLorentzVectorD v4_tn;
-			v4_tn.setVect(v3_tn);
+			//StLorentzVectorD v4_tp;
+			//v4_tp.setVect(v3_tp);
+			//StLorentzVectorD v4_tn;
+			//v4_tn.setVect(v3_tn);
 			StThreeVectorD v3_decay = v3_v0position - pv_position;
 			double openAngle = v3_tp.angle(v3_tn);
 			double cosrp = cos(v3_decay.angle(v3_tp+v3_tn));
 			double sinrp = sin(v3_decay.angle(v3_tp+v3_tn));
 			double dcaV0 = sqrt((sinrp*v3_decay).mag2());
+			StThreeVectorD m_v3 = v3_tp + v3_tn;
 
 			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
 			{
-				v4_tp.setE(v3_tp*v3_tp + c_massProton*c_massProton);
-				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
-				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
-				double mass_v0 = v4_v0.m();
+				double Ep = v3_tp.mag2() + c_massProton*c_massProton;
+				double En = v3_tn.mag2() + c_massPion*c_massPion;
+				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
+
 				if (mass_v0>1.06 && mass_v0<=1.18)
 				{	
 					m_cosrp_L.push_back(cosrp);
@@ -407,7 +410,7 @@ int StChargeTrackMaker::Make()
 					m_id_Lpi.push_back(tn.get_id());
 					m_dca_Lp.push_back(tp.get_dca().mag());
 					m_dca_Lpi.push_back(tn.get_dca().mag());
-					m_v3_L.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_v3_L.push_back( TVector3(m_v3.x(),m_v3.y(),m_v3.z()) );
 					m_im_L.push_back(mass_v0);
 					m_v0_L.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_L.push_back(dca2_v0);
@@ -417,10 +420,9 @@ int StChargeTrackMaker::Make()
 			}
 			if ( fabs(tn.get_nSigmaProton())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
 			{
-				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
-				v4_tn.setE(v3_tn*v3_tn + c_massProton*c_massProton);
-				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
-				double mass_v0 = v4_v0.m();
+				double Ep = v3_tp.mag2() + c_massPion*c_massPion;
+				double En = v3_tn.mag2() + c_massProton*c_massProton;
+				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
 
 				if (mass_v0>1.06 && mass_v0<=1.18)
 				{
@@ -430,7 +432,7 @@ int StChargeTrackMaker::Make()
 					m_id_Api.push_back(tp.get_id());
 					m_dca_Ap.push_back(tn.get_dca().mag());
 					m_dca_Api.push_back(tp.get_dca().mag());
-					m_v3_A.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_v3_A.push_back( TVector3(m_v3.x(),m_v3.y(),m_v3.z()) );
 					m_im_A.push_back(mass_v0);
 					m_v0_A.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_A.push_back(dca2_v0);
@@ -440,10 +442,10 @@ int StChargeTrackMaker::Make()
 			}
 			if ( fabs(tn.get_nSigmaPion())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
 			{
-				v4_tp.setE(v3_tp*v3_tp + c_massPion*c_massPion);
-				v4_tn.setE(v3_tn*v3_tn + c_massPion*c_massPion);
-				StLorentzVectorD v4_v0 = v4_tp + v4_tn;
-				double mass_v0 = v4_v0.m();
+				double Ep = v3_tp.mag2() + c_massPion*c_massPion;
+				double En = v3_tn.mag2() + c_massPion*c_massPion;
+				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
+
 				if (cosrp<0.98) continue;
 				if (dca2_v0>1.0) continue;
 				if (tp.get_dca().mag()<0.2) continue;
@@ -459,7 +461,7 @@ int StChargeTrackMaker::Make()
 					m_id_Kpi.push_back(tn.get_id());
 					m_dca_Kp.push_back(tp.get_dca().mag());
 					m_dca_Kpi.push_back(tn.get_dca().mag());
-					m_v3_K.push_back( TVector3(v4_v0.x(),v4_v0.y(),v4_v0.z()) );
+					m_v3_K.push_back( TVector3(m_v3.x(),m_v3.y(),m_v3.z()) );
 					m_im_K.push_back(mass_v0);
 					m_v0_K.push_back( TVector3(v3_v0position.x(),v3_v0position.y(),v3_v0position.z()) );
 					m_dca2_K.push_back(dca2_v0);
