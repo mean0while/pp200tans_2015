@@ -398,8 +398,8 @@ int StChargeTrackMaker::Make()
 
 			if ( fabs(tp.get_nSigmaProton())<3.0 && fabs(tn.get_nSigmaPion()<3.0) )
 			{
-				double Ep = v3_tp.mag2() + c_massProton*c_massProton;
-				double En = v3_tn.mag2() + c_massPion*c_massPion;
+				double Ep = sqrt(v3_tp.mag2() + c_massProton*c_massProton);
+				double En = sqrt(v3_tn.mag2() + c_massPion*c_massPion);
 				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
 
 				if (mass_v0>1.06 && mass_v0<=1.18)
@@ -420,8 +420,8 @@ int StChargeTrackMaker::Make()
 			}
 			if ( fabs(tn.get_nSigmaProton())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
 			{
-				double Ep = v3_tp.mag2() + c_massPion*c_massPion;
-				double En = v3_tn.mag2() + c_massProton*c_massProton;
+				double Ep = sqrt(v3_tp.mag2() + c_massPion*c_massPion);
+				double En = sqrt(v3_tn.mag2() + c_massProton*c_massProton);
 				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
 
 				if (mass_v0>1.06 && mass_v0<=1.18)
@@ -442,8 +442,8 @@ int StChargeTrackMaker::Make()
 			}
 			if ( fabs(tn.get_nSigmaPion())<3.0 && fabs(tp.get_nSigmaPion()<3.0) )
 			{
-				double Ep = v3_tp.mag2() + c_massPion*c_massPion;
-				double En = v3_tn.mag2() + c_massPion*c_massPion;
+				double Ep = sqrt(v3_tp.mag2() + c_massPion*c_massPion);
+				double En = sqrt(v3_tn.mag2() + c_massPion*c_massPion);
 				double mass_v0 = sqrt((Ep+En)*(Ep+En)-m_v3.mag2());
 
 				if (cosrp<0.98) continue;
